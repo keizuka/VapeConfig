@@ -1,4 +1,5 @@
 <resources>
+    <string name="catalog_title">Shared catalog</string>
     <string name="catalog_intro">Browse the shared catalogue or manage local records stored on this device.</string>
     <string name="catalog_shared_tab">Shared</string>
     <string name="catalog_local_tab">My records</string>
