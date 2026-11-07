@@ -6,7 +6,7 @@ plugins {
 
 android {
     namespace = "com.keizuka.vapeconfig.feature.configurator"
-    compileSdk = 35
+    compileSdk = 36
     defaultConfig { minSdk = 26 }
     buildFeatures { compose = true }
     compileOptions {
