@@ -58,8 +58,8 @@ jobs:
           path: release-assets
       - name: Publish GitHub release
         env:
-          GH_TOKEN: \${{ github.token }}
-          RELEASE_VERSION: \${{ inputs.release_version }}
+          GH_TOKEN: ${{ github.token }}
+          RELEASE_VERSION: ${{ inputs.release_version }}
         run: |
           if [[ ! "$RELEASE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Version must follow vMAJOR.MINOR.PATCH, for example v0.1.0"
