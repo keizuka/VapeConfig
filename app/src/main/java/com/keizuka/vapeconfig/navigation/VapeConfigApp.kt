@@ -4,19 +4,21 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.navigation.NavType
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import com.keizuka.vapeconfig.BuildConfig
 import com.keizuka.vapeconfig.R
-import com.keizuka.vapeconfig.ui.DashboardScreen
-import com.keizuka.vapeconfig.ui.Section
+import com.keizuka.vapeconfig.VapeConfigApplication
 import com.keizuka.vapeconfig.feature.catalog.CatalogScreen
 import com.keizuka.vapeconfig.feature.configurator.ConfiguratorScreen
 import com.keizuka.vapeconfig.feature.liquids.LiquidsScreen
 import com.keizuka.vapeconfig.feature.settings.SettingsScreen
-import com.keizuka.vapeconfig.BuildConfig
+import com.keizuka.vapeconfig.ui.DashboardScreen
+import com.keizuka.vapeconfig.ui.Section
 
 private object Routes {
     const val Dashboard = "dashboard"
@@ -27,6 +29,7 @@ private object Routes {
 @Composable
 fun VapeConfigApp() {
     val navController = rememberNavController()
+    val database = (LocalContext.current.applicationContext as VapeConfigApplication).database
     Scaffold { padding ->
         NavHost(
             navController = navController,
@@ -40,11 +43,10 @@ fun VapeConfigApp() {
                 route = Routes.Section,
                 arguments = listOf(navArgument("section") { type = NavType.StringType }),
             ) { entry ->
-                val key = entry.arguments?.getString("section")
-                when (key) {
-                    Section.Catalog.route -> CatalogScreen { navController.popBackStack() }
-                    Section.Configurator.route -> ConfiguratorScreen { navController.popBackStack() }
-                    Section.Liquids.route -> LiquidsScreen { navController.popBackStack() }
+                when (entry.arguments?.getString("section")) {
+                    Section.Catalog.route -> CatalogScreen(database.catalogItems()) { navController.popBackStack() }
+                    Section.Configurator.route -> ConfiguratorScreen(database.coilConfigurations()) { navController.popBackStack() }
+                    Section.Liquids.route -> LiquidsScreen(database.liquidRecipes()) { navController.popBackStack() }
                     Section.Settings.route -> SettingsScreen(BuildConfig.VERSION_NAME) { navController.popBackStack() }
                 }
             }

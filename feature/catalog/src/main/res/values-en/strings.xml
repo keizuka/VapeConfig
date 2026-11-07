@@ -1,6 +1,13 @@
 <resources>
-    <string name="catalog_intro">A mixed catalog for items saved locally and references from the shared catalog.</string>
-    <string name="catalog_local">Local items</string>
-    <string name="catalog_remote">Shared catalog</string>
+    <string name="catalog_intro">Add and manage your own items. They stay stored on this device.</string>
+    <string name="catalog_local">Local catalogue</string>
+    <string name="catalog_remote">Shared catalogue</string>
+    <string name="catalog_add_title">Add an item</string>
+    <string name="catalog_name">Name</string>
+    <string name="catalog_category">Category</string>
+    <string name="catalog_notes">Notes</string>
+    <string name="catalog_save">Save</string>
+    <string name="catalog_empty">No items saved yet.</string>
+    <string name="catalog_delete">Delete</string>
     <string name="back">Back</string>
 </resources>

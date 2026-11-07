@@ -1,6 +1,11 @@
 <resources>
-    <string name="liquids_intro">Create recipes, manage ingredients, and keep your mixes on this device.</string>
+    <string name="liquids_intro">Create recipes and keep their ingredients and notes on this device.</string>
     <string name="liquids_recipes">My recipes</string>
-    <string name="liquids_ingredients">Ingredients</string>
+    <string name="liquids_ingredients">Ingredients and notes</string>
+    <string name="liquids_add_title">New recipe</string>
+    <string name="liquids_name">Recipe name</string>
+    <string name="liquids_save">Save</string>
+    <string name="liquids_empty">No recipes saved yet.</string>
+    <string name="liquids_delete">Delete</string>
     <string name="back">Back</string>
 </resources>

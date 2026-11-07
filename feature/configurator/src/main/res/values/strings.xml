@@ -1,8 +1,15 @@
 <resources>
-    <string name="configurator_intro">Gérez les résistances préfabriquées et préparez le calculateur reconstructible.</string>
-    <string name="configurator_prefab">Résistances préfabriquées</string>
-    <string name="configurator_rebuildable">Reconstructibles</string>
-    <string name="configurator_safety_title">Estimation uniquement</string>
-    <string name="configurator_safety_body">Le calcul ne certifie jamais la sécurité d’un montage. Vérifiez indépendamment la résistance réelle, les accus et les limites du matériel avant toute utilisation.</string>
+    <string name="configurator_intro">Enregistrez vos configurations pour les retrouver sur cet appareil. Le calculateur électrique n’est pas encore disponible.</string>
+    <string name="configurator_prefab">Résistance préfabriquée</string>
+    <string name="configurator_rebuildable">Reconstructible</string>
+    <string name="configurator_safety_title">Vérification indépendante nécessaire</string>
+    <string name="configurator_safety_body">Une fiche enregistrée ou une estimation ne certifie jamais la sécurité d’un montage. Vérifiez indépendamment la résistance réelle, les accus et les limites du matériel avant toute utilisation.</string>
+    <string name="configurator_not_calculator">Cette version permet d’enregistrer des configurations ; elle ne calcule pas la sécurité d’un montage.</string>
+    <string name="configurator_add_title">Ajouter une configuration</string>
+    <string name="configurator_name">Nom</string>
+    <string name="configurator_notes">Notes (matériel, résistance mesurée…)</string>
+    <string name="configurator_save">Enregistrer</string>
+    <string name="configurator_empty">Aucune configuration enregistrée pour le moment.</string>
+    <string name="configurator_delete">Supprimer</string>
     <string name="back">Retour</string>
 </resources>

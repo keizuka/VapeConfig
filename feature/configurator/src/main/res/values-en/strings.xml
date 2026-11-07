@@ -1,8 +1,15 @@
 <resources>
-    <string name="configurator_intro">Manage pre-built coils and prepare the rebuildable coil calculator.</string>
-    <string name="configurator_prefab">Pre-built coils</string>
+    <string name="configurator_intro">Save configurations to find them again on this device. The electrical calculator is not available yet.</string>
+    <string name="configurator_prefab">Prefabricated coil</string>
     <string name="configurator_rebuildable">Rebuildable</string>
-    <string name="configurator_safety_title">Estimate only</string>
-    <string name="configurator_safety_body">A calculation never certifies a build as safe. Independently verify the actual resistance, batteries, and hardware limits before use.</string>
+    <string name="configurator_safety_title">Independent verification required</string>
+    <string name="configurator_safety_body">A saved setup or estimate never certifies that a build is safe. Independently verify the actual resistance, batteries, and equipment limits before use.</string>
+    <string name="configurator_not_calculator">This version saves configurations; it does not calculate build safety.</string>
+    <string name="configurator_add_title">Add a configuration</string>
+    <string name="configurator_name">Name</string>
+    <string name="configurator_notes">Notes (equipment, measured resistance…)</string>
+    <string name="configurator_save">Save</string>
+    <string name="configurator_empty">No configurations saved yet.</string>
+    <string name="configurator_delete">Delete</string>
     <string name="back">Back</string>
 </resources>

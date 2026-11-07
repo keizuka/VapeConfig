@@ -1,6 +1,11 @@
 <resources>
-    <string name="liquids_intro">Créez vos recettes, gérez les ingrédients et conservez vos mélanges sur cet appareil.</string>
+    <string name="liquids_intro">Créez vos recettes et conservez les ingrédients et notes sur cet appareil.</string>
     <string name="liquids_recipes">Mes recettes</string>
-    <string name="liquids_ingredients">Ingrédients</string>
+    <string name="liquids_ingredients">Ingrédients et notes</string>
+    <string name="liquids_add_title">Nouvelle recette</string>
+    <string name="liquids_name">Nom de la recette</string>
+    <string name="liquids_save">Enregistrer</string>
+    <string name="liquids_empty">Aucune recette enregistrée pour le moment.</string>
+    <string name="liquids_delete">Supprimer</string>
     <string name="back">Retour</string>
 </resources>

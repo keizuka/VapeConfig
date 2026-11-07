@@ -1,6 +1,13 @@
 <resources>
-    <string name="catalog_intro">Un catalogue mixte qui réunira vos éléments enregistrés localement et les références du catalogue partagé.</string>
-    <string name="catalog_local">Éléments locaux</string>
+    <string name="catalog_intro">Ajoutez et gérez vos propres éléments. Ils restent enregistrés sur cet appareil.</string>
+    <string name="catalog_local">Catalogue local</string>
     <string name="catalog_remote">Catalogue partagé</string>
+    <string name="catalog_add_title">Ajouter un élément</string>
+    <string name="catalog_name">Nom</string>
+    <string name="catalog_category">Catégorie</string>
+    <string name="catalog_notes">Notes</string>
+    <string name="catalog_save">Enregistrer</string>
+    <string name="catalog_empty">Aucun élément enregistré pour le moment.</string>
+    <string name="catalog_delete">Supprimer</string>
     <string name="back">Retour</string>
 </resources>
