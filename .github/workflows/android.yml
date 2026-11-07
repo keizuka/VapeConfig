@@ -58,10 +58,10 @@ jobs:
           path: release-assets
       - name: Publish GitHub release
         env:
-          GH_TOKEN: ${{ github.token }}
-          RELEASE_VERSION: ${{ inputs.release_version }}
+          GH_TOKEN: \${{ github.token }}
+          RELEASE_VERSION: \${{ inputs.release_version }}
         run: |
-          if [[ ! "$RELEASE_VERSION" =~ ^v[0-9]+\\.[0-9]+\\.[0-9]+$ ]]; then
+          if [[ ! "$RELEASE_VERSION" =~ ^v[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
             echo "Version must follow vMAJOR.MINOR.PATCH, for example v0.1.0"
             exit 1
           fi
@@ -69,7 +69,7 @@ jobs:
             echo "Release $RELEASE_VERSION already exists"
             exit 1
           fi
-          gh release create "$RELEASE_VERSION" release-assets/VapeConfig-debug.apk \\
-            --target main \\
-            --title "VapeConfig $RELEASE_VERSION" \\
+          gh release create "$RELEASE_VERSION" release-assets/VapeConfig-debug.apk \
+            --target main \
+            --title "VapeConfig $RELEASE_VERSION" \
             --notes "VapeConfig $RELEASE_VERSION ajoute les profils de batteries intégrées et amovibles, un catalogue local et partagé, un calculateur de mélange PG/VG/nicotine, et un estimateur théorique de résistance pour fil simple. Les données personnelles restent sur l’appareil. La compatibilité compare uniquement les connecteurs saisis et ne valide ni les dimensions, ni l’électronique, ni la sécurité. Les estimations de résistance ne prouvent pas qu’un montage est sûr : mesure et vérification indépendante indispensables. Cette APK est une version debug non signée pour distribution de production ; Android peut afficher un avertissement à l’installation."
