@@ -36,6 +36,7 @@ dependencies {
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
     implementation(project(":core:database"))
+    implementation(libs.androidx.room.runtime)
     implementation(project(":feature:catalog"))
     implementation(project(":feature:configurator"))
     implementation(project(":feature:liquids"))
