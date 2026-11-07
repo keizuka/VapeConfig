@@ -1,7 +1,8 @@
 <resources>
     <string name="app_name">VapeConfig</string>
-    <string name="dashboard_title">Dashboard</string>
-    <string name="dashboard_welcome">Your hardware, recipes, and configurations.</string>
+    <string name="dashboard_title">Your workspace at a glance</string>
+    <string name="dashboard_eyebrow">HARDWARE • RECIPES • SETTINGS</string>
+    <string name="dashboard_welcome">Organize your gear and find your tools quickly.</string>
     <string name="catalog_title">Catalog</string>
     <string name="catalog_summary">Browse atomizers, mods, and accessories</string>
     <string name="configurator_title">Configurator</string>

@@ -41,3 +41,7 @@ Le calcul reconstructible fournit uniquement une **estimation**. Il ne détermin
 ## Langues
 
 Le français est la langue initiale. Les ressources Android sont organisées par locale afin d’ajouter d’autres traductions (`values-en`, etc.) sans coder les textes directement dans les écrans.
+
+## Publication d’une préversion
+
+Dans **Actions → Android build → Run workflow**, saisir une version SemVer telle que `v0.1.0`. Laisser le champ vide pour compiler seulement. La publication crée une release GitHub avec l’APK debug installable. Cette préversion n’est pas signée avec une clé de production; configurez une signature dédiée avant toute diffusion de production.

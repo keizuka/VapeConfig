@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -27,16 +28,34 @@ enum class Section(val route: String, val titleRes: Int, val summaryRes: Int) {
 
 @Composable
 fun DashboardScreen(onOpenSection: (Section) -> Unit) {
-    Column(Modifier.fillMaxSize().padding(20.dp)) {
-        Text(stringResource(R.string.dashboard_title), style = MaterialTheme.typography.headlineMedium)
-        Text(
-            stringResource(R.string.dashboard_welcome),
-            style = MaterialTheme.typography.bodyLarge,
-            modifier = Modifier.padding(top = 8.dp, bottom = 24.dp),
-            color = MaterialTheme.colorScheme.onSurfaceVariant,
-        )
+    Column(Modifier.fillMaxSize().padding(horizontal = 20.dp, vertical = 16.dp)) {
+        Card(
+            colors = CardDefaults.cardColors(
+                containerColor = MaterialTheme.colorScheme.primaryContainer,
+            ),
+            modifier = Modifier.padding(bottom = 20.dp),
+        ) {
+            Column(Modifier.padding(20.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                Text(
+                    stringResource(R.string.dashboard_eyebrow),
+                    style = MaterialTheme.typography.labelLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+                Text(
+                    stringResource(R.string.dashboard_title),
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+                Text(
+                    stringResource(R.string.dashboard_welcome),
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = MaterialTheme.colorScheme.onPrimaryContainer,
+                )
+            }
+        }
         LazyVerticalGrid(
             columns = GridCells.Adaptive(minSize = 155.dp),
+            modifier = Modifier.weight(1f),
             contentPadding = PaddingValues(bottom = 16.dp),
             horizontalArrangement = Arrangement.spacedBy(12.dp),
             verticalArrangement = Arrangement.spacedBy(12.dp),
@@ -44,14 +63,19 @@ fun DashboardScreen(onOpenSection: (Section) -> Unit) {
             items(Section.entries) { section ->
                 Card(
                     onClick = { onOpenSection(section) },
-                    colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceVariant),
+                    colors = CardDefaults.cardColors(
+                        containerColor = MaterialTheme.colorScheme.surfaceVariant,
+                    ),
                 ) {
-                    Column(Modifier.padding(16.dp)) {
-                        Text(stringResource(section.titleRes), style = MaterialTheme.typography.titleLarge)
+                    Column(Modifier.padding(18.dp), verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                        Text(
+                            stringResource(section.titleRes),
+                            style = MaterialTheme.typography.titleLarge,
+                        )
                         Text(
                             stringResource(section.summaryRes),
                             style = MaterialTheme.typography.bodyMedium,
-                            modifier = Modifier.padding(top = 8.dp),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant,
                         )
                     }
                 }
@@ -59,4 +83,3 @@ fun DashboardScreen(onOpenSection: (Section) -> Unit) {
         }
     }
 }
-
