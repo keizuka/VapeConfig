@@ -1,0 +1,10 @@
+[
+  {"id":"removable-cell","name":"Accumulateur amovible","category":"Batteries","description":"Référence générique. Notez le format et les caractéristiques uniquement à partir de la documentation du fabricant correspondant au modèle exact."},
+  {"id":"integrated-cell","name":"Batterie intégrée","category":"Batteries","description":"Référence générique pour un appareil à batterie intégrée. Consultez le manuel de l’appareil pour ses caractéristiques et consignes."},
+  {"id":"mod-device","name":"Mod électronique","category":"Appareils","description":"Fiche de classement. Les plages électriques et compatibilités doivent être vérifiées dans le manuel du modèle exact."},
+  {"id":"tank-device","name":"Atomiseur / clearomiseur","category":"Atomiseurs","description":"Fiche de classement. Vérifiez le raccord, le dégagement mécanique et les consignes du fabricant."},
+  {"id":"prefab-coil","name":"Résistance préfabriquée","category":"Résistances","description":"Notez la référence et la plage d’utilisation indiquée par les fabricants de la résistance et de l’appareil."},
+  {"id":"rebuildable-coil","name":"Coil reconstructible","category":"Résistances","description":"Une estimation théorique ne remplace jamais la mesure réelle ni une vérification indépendante."},
+  {"id":"liquid-base","name":"Bases PG / VG","category":"Liquides","description":"Consignez les concentrations, supports et références exactes figurant sur l’étiquette."},
+  {"id":"flavors","name":"Arômes","category":"Liquides","description":"Suivez les consignes et proportions données par le fabricant de chaque arôme."}
+]

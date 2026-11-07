@@ -1,13 +1,29 @@
 <resources>
-    <string name="catalog_intro">Ajoutez et gérez vos propres éléments. Ils restent enregistrés sur cet appareil.</string>
-    <string name="catalog_local">Catalogue local</string>
-    <string name="catalog_remote">Catalogue partagé</string>
-    <string name="catalog_add_title">Ajouter un élément</string>
+    <string name="catalog_intro">Parcourez le catalogue partagé ou gérez vos fiches locales, conservées sur cet appareil.</string>
+    <string name="catalog_shared_tab">Partagé</string>
+    <string name="catalog_local_tab">Mes fiches</string>
+    <string name="catalog_refresh">Actualiser le catalogue partagé</string>
+    <string name="catalog_loading">Chargement…</string>
+    <string name="catalog_search">Rechercher</string>
+    <string name="catalog_shared_error">Catalogue partagé indisponible. Vérifiez la connexion et réessayez.</string>
+    <string name="catalog_shared_empty">Aucune référence ne correspond à cette recherche.</string>
+    <string name="catalog_source">Source</string>
+    <string name="catalog_add_title">Ajouter une fiche locale</string>
     <string name="catalog_name">Nom</string>
     <string name="catalog_category">Catégorie</string>
+    <string name="catalog_connection">Connecteur (facultatif)</string>
+    <string name="catalog_connection_value">Connecteur : %1$s</string>
     <string name="catalog_notes">Notes</string>
     <string name="catalog_save">Enregistrer</string>
-    <string name="catalog_empty">Aucun élément enregistré pour le moment.</string>
+    <string name="catalog_empty">Aucune fiche locale enregistrée.</string>
     <string name="catalog_delete">Supprimer</string>
+    <string name="compatibility_title">Vérifier le connecteur</string>
+    <string name="compatibility_device_connector">Connecteur de l’appareil</string>
+    <string name="compatibility_atomizer_connector">Connecteur de l’atomiseur</string>
+    <string name="compatibility_check">Comparer</string>
+    <string name="compatibility_matching">Connecteurs identiques.</string>
+    <string name="compatibility_different">Connecteurs différents.</string>
+    <string name="compatibility_unknown">Renseignez les deux connecteurs pour les comparer.</string>
+    <string name="compatibility_limit">Cette comparaison porte uniquement sur le texte saisi. Elle ne vérifie pas les dimensions, le dégagement, l’électronique ou la sécurité.</string>
     <string name="back">Retour</string>
 </resources>

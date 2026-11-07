@@ -4,13 +4,14 @@
     <string name="dashboard_eyebrow">MATÉRIEL • RECETTES • RÉGLAGES</string>
     <string name="dashboard_welcome">Organisez vos équipements et retrouvez vos outils rapidement.</string>
     <string name="catalog_title">Catalogue</string>
-    <string name="catalog_summary">Parcourir les atomiseurs, box et accessoires</string>
+    <string name="catalog_summary">Parcourir le catalogue partagé et vos fiches locales</string>
     <string name="configurator_title">Configurateur</string>
-    <string name="configurator_summary">Préfabriquées et reconstructibles</string>
+    <string name="configurator_summary">Estimer la résistance théorique et enregistrer vos coils</string>
     <string name="liquids_title">Liquides</string>
-    <string name="liquids_summary">Gérer vos recettes et ingrédients</string>
+    <string name="liquids_summary">Calculer les volumes et enregistrer vos recettes</string>
+    <string name="batteries_title">Accus</string>
+    <string name="batteries_summary">Gérer les profils intégrés et amovibles</string>
     <string name="settings_title">Paramètres</string>
     <string name="settings_summary">Données locales et mises à jour</string>
-    <string name="coming_soon">Cette section sera développée dans une prochaine étape.</string>
     <string name="back">Retour</string>
 </resources>

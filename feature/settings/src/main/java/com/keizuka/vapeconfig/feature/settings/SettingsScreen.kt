@@ -61,6 +61,12 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
             TextButton(onClick = { uriHandler.openUri(result.pageUrl) }) {
                 Text(stringResource(R.string.settings_open_release))
             }
+            result.apkDownloadUrl?.let { apkUrl ->
+                TextButton(onClick = { uriHandler.openUri(apkUrl) }) {
+                    Text(stringResource(R.string.settings_download_apk))
+                }
+            }
+            Text(stringResource(R.string.settings_manual_install), style = MaterialTheme.typography.bodySmall)
         }
     }
 }
@@ -74,9 +80,7 @@ private fun compareVersions(left: String, right: String): Int {
         val b = rightParts.getOrNull(index).orEmpty()
         val comparison = if (a.toLongOrNull() != null && b.toLongOrNull() != null) {
             a.toLong().compareTo(b.toLong())
-        } else {
-            a.compareTo(b, ignoreCase = true)
-        }
+        } else a.compareTo(b, ignoreCase = true)
         if (comparison != 0) return comparison
     }
     return 0

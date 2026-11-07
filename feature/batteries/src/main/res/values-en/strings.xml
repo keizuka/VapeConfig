@@ -1,0 +1,23 @@
+<resources>
+    <string name="batteries_title">My batteries</string>
+    <string name="batteries_intro">Keep details for the built-in and removable batteries in your devices.</string>
+    <string name="batteries_add_title">Add a profile</string>
+    <string name="batteries_internal">Built-in</string>
+    <string name="batteries_removable">Removable</string>
+    <string name="batteries_name">Profile name</string>
+    <string name="batteries_model">Model (optional)</string>
+    <string name="batteries_format">Format / number of cells (optional)</string>
+    <string name="batteries_capacity">Rated capacity (mAh, optional)</string>
+    <string name="batteries_current_rating">Manufacturer-stated continuous current (A, optional)</string>
+    <string name="batteries_source">Manufacturer documentation link (optional)</string>
+    <string name="batteries_notes">Notes</string>
+    <string name="batteries_save">Save</string>
+    <string name="batteries_empty">No profiles saved.</string>
+    <string name="batteries_model_value">Model: %1$s</string>
+    <string name="batteries_format_value">Format: %1$s</string>
+    <string name="batteries_capacity_value">Manufacturer capacity: %1$s mAh</string>
+    <string name="batteries_current_value">Declared continuous current: %1$s A</string>
+    <string name="batteries_delete">Delete</string>
+    <string name="batteries_safety">Use specifications from the manufacturer that match the exact model. These notes do not verify the battery, device, or their compatibility. Do not use a damaged battery and follow manufacturer guidance.</string>
+    <string name="back">Back</string>
+</resources>

@@ -4,13 +4,14 @@
     <string name="dashboard_eyebrow">HARDWARE • RECIPES • SETTINGS</string>
     <string name="dashboard_welcome">Organize your gear and find your tools quickly.</string>
     <string name="catalog_title">Catalog</string>
-    <string name="catalog_summary">Browse atomizers, mods, and accessories</string>
+    <string name="catalog_summary">Browse the shared catalogue and local records</string>
     <string name="configurator_title">Configurator</string>
-    <string name="configurator_summary">Pre-built and rebuildable coils</string>
+    <string name="configurator_summary">Estimate theoretical coil resistance and save setups</string>
     <string name="liquids_title">E-liquids</string>
-    <string name="liquids_summary">Manage your recipes and ingredients</string>
+    <string name="liquids_summary">Calculate ingredient volumes and save recipes</string>
+    <string name="batteries_title">Batteries</string>
+    <string name="batteries_summary">Manage built-in and removable profiles</string>
     <string name="settings_title">Settings</string>
     <string name="settings_summary">Local data and updates</string>
-    <string name="coming_soon">This section will be developed in a future step.</string>
     <string name="back">Back</string>
 </resources>

@@ -1,0 +1,23 @@
+<resources>
+    <string name="batteries_title">Mes accus</string>
+    <string name="batteries_intro">Conservez les informations des batteries intégrées et amovibles de vos appareils.</string>
+    <string name="batteries_add_title">Ajouter un profil</string>
+    <string name="batteries_internal">Intégrée</string>
+    <string name="batteries_removable">Amovible</string>
+    <string name="batteries_name">Nom du profil</string>
+    <string name="batteries_model">Modèle (facultatif)</string>
+    <string name="batteries_format">Format / nombre d’accus (facultatif)</string>
+    <string name="batteries_capacity">Capacité indiquée (mAh, facultatif)</string>
+    <string name="batteries_current_rating">Courant continu indiqué par le fabricant (A, facultatif)</string>
+    <string name="batteries_source">Lien vers la documentation fabricant (facultatif)</string>
+    <string name="batteries_notes">Notes</string>
+    <string name="batteries_save">Enregistrer</string>
+    <string name="batteries_empty">Aucun profil enregistré.</string>
+    <string name="batteries_model_value">Modèle : %1$s</string>
+    <string name="batteries_format_value">Format : %1$s</string>
+    <string name="batteries_capacity_value">Capacité fabricant : %1$s mAh</string>
+    <string name="batteries_current_value">Courant continu déclaré : %1$s A</string>
+    <string name="batteries_delete">Supprimer</string>
+    <string name="batteries_safety">Utilisez uniquement les spécifications du fabricant correspondant exactement au modèle. Ces notes ne vérifient ni la batterie, ni l’appareil, ni leur compatibilité. N’utilisez pas une batterie endommagée et suivez les consignes du fabricant.</string>
+    <string name="back">Retour</string>
+</resources>

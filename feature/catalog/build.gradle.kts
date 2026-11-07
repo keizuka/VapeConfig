@@ -23,4 +23,5 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(project(":core:compatibility"))
     implementation(project(":core:database"))
+    implementation(libs.kotlinx.coroutines.android)
 }

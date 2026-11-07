@@ -1,47 +1,48 @@
 # VapeConfig
 
-Application Android de configuration et de suivi pour le matériel de vape, avec stockage local.
+Application Android en français pour gérer son matériel de vape et ses recettes. Les données personnelles restent sur l’appareil; le catalogue partagé public est fourni par le dépôt.
 
-## État du projet
+## Fonctions
 
-Le dépôt contient le squelette Kotlin/Jetpack Compose/Material 3 et le tableau de bord initial. Les données de catalogue restent locales; la synchronisation distante et les fonctions de calcul détaillées seront développées ensuite.
+- Catalogue partagé consultable et fiches matérielles locales modifiables/supprimables.
+- Comparaison de texte des connecteurs pour signaler seulement s’ils concordent; cela ne constitue pas une vérification de compatibilité complète.
+- Profils de batteries intégrées et amovibles, avec références fabricant saisies par l’utilisateur.
+- Estimateur théorique de résistance pour fil rond (Kanthal A-1, Nichrome 80 et acier 316L) et fiches reconstructibles enregistrées.
+- Calculateur volumétrique de recette selon volume cible, nicotine, concentration de base, arômes, ratio PG/VG et supports des ingrédients.
+- Vérification des GitHub Releases publiques et lien de téléchargement manuel de l’APK.
+- Interface Material 3 sombre, français par défaut et ressources anglaises.
 
 ## Modules
 
-- `app` : démarrage, thème, navigation et tableau de bord.
-- `core:database` : persistance Room/SQLite.
-- `core:calculator` : domaine des estimations de résistances.
-- `core:compatibility` : règles de compatibilité entre éléments.
-- `core:updater` : consultation des GitHub Releases publiques.
-- `feature:catalog` : catalogue mixte de matériel.
-- `feature:configurator` : résistances préfabriquées et reconstructibles.
-- `feature:liquids` : recettes et liquides.
-- `feature:settings` : réglages et vérification des mises à jour.
+- `app`: démarrage, thème, navigation et tableau de bord.
+- `core:database`: stockage Room/SQLite et migration de schéma.
+- `core:calculator`: estimateurs de résistance et de mélanges.
+- `core:compatibility`: comparaison limitée des connecteurs déclarés.
+- `core:updater`: consultation des GitHub Releases publiques.
+- `feature:catalog`, `feature:batteries`, `feature:configurator`, `feature:liquids`, `feature:settings`.
 
-## Prérequis et compilation
+## Compilation
 
-Android Studio récent avec JDK 17 et Android SDK 35. Pour compiler l’APK debug après installation de Gradle :
+Avec JDK 17 et Android SDK 36 :
 
 ```sh
 gradle assembleDebug
 ```
 
-Le workflow GitHub Actions compile l’APK à chaque push et pull request vers `main`, puis le conserve comme artefact. Il ne crée ni tag ni release.
+GitHub Actions compile l’APK pour chaque push sur `main`. Une release n’est publiée qu’après déclenchement manuel du workflow avec un numéro de version.
 
 ## Versioning
 
-Suivre [Semantic Versioning](https://semver.org/), avec des tags `vMAJEUR.MINEUR.CORRECTIF` (par exemple `v0.1.0`). Le `versionCode` Android doit augmenter à chaque publication; `versionName` reprend le tag sans le préfixe `v`. Les releases et leurs APK seront publiés manuellement après validation.
+Suivre Semantic Versioning avec des tags `vMAJEUR.MINEUR.CORRECTIF`. Augmenter `versionCode` Android pour chaque version et aligner `versionName` sur le tag sans `v`.
 
-## Données et sécurité
+## Limites et sécurité
 
-Les données personnelles et configurations sont conservées localement dans SQLite via Room. La vérification des mises à jour consulte les métadonnées publiques de `Keizuka/VapeConfig`; aucune release n’est publiée automatiquement.
+L’estimation reconstructible est théorique, pour des coils simples en fil rond; elle ne tient pas compte de toutes les variations réelles et ne certifie jamais la sécurité. Mesurez le montage et vérifiez indépendamment les accus, le matériel et leurs limites.
 
-Le calcul reconstructible fournit uniquement une **estimation**. Il ne détermine pas si un montage est sûr. Vérifiez indépendamment la résistance réelle, l’état et les limites des accus, les spécifications du matériel et les recommandations applicables avant toute utilisation. Ne vous fiez jamais au seul résultat du calculateur.
+La comparaison du catalogue porte uniquement sur le texte des connecteurs renseignés. Elle ne vérifie ni les dimensions, ni le dégagement, ni l’électronique, ni la sécurité.
 
-## Langues
+Les recettes sont des calculs de volumes fondés sur les concentrations et supports indiqués. Vérifiez les étiquettes et les consignes officielles des produits, notamment pour la nicotine. Les profils de batteries sont des notes personnelles, pas une certification ni une recommandation de modèle.
 
-Le français est la langue initiale. Les ressources Android sont organisées par locale afin d’ajouter d’autres traductions (`values-en`, etc.) sans coder les textes directement dans les écrans.
+La documentation des formules et des références de résistivité se trouve dans [CALCULATIONS.md](docs/CALCULATIONS.md).
 
-## Publication d’une préversion
-
-Dans **Actions → Android build → Run workflow**, saisir une version SemVer telle que `v0.1.0`. Laisser le champ vide pour compiler seulement. La publication crée une release GitHub avec l’APK debug installable. Cette préversion n’est pas signée avec une clé de production; configurez une signature dédiée avant toute diffusion de production.
+La release est une APK debug non signée avec une clé de production. Une signature dédiée et les vérifications requises sont nécessaires avant une diffusion de production.

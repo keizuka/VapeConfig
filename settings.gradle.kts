@@ -17,4 +17,4 @@ dependencyResolutionManagement {
 rootProject.name = "VapeConfig"
 include(":app")
 include(":core:database", ":core:calculator", ":core:compatibility", ":core:updater")
-include(":feature:catalog", ":feature:configurator", ":feature:liquids", ":feature:settings")
+include(":feature:catalog", ":feature:configurator", ":feature:liquids", ":feature:settings", ":feature:batteries")

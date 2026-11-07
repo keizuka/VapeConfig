@@ -8,5 +8,7 @@
     <string name="settings_no_release">Aucune release publique disponible pour le moment.</string>
     <string name="settings_update_error">Impossible de vérifier les mises à jour. Réessayez plus tard.</string>
     <string name="settings_open_release">Ouvrir la page de la release</string>
+    <string name="settings_download_apk">Télécharger l’APK</string>
+    <string name="settings_manual_install">Android ouvrira le téléchargement. L’installation doit être confirmée sur l’appareil.</string>
     <string name="back">Retour</string>
 </resources>

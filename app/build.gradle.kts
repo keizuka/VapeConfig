@@ -12,8 +12,8 @@ android {
         applicationId = "com.keizuka.vapeconfig"
         minSdk = 26
         targetSdk = 35
-        versionCode = 2
-        versionName = "0.1.1"
+        versionCode = 3
+        versionName = "0.2.0"
     }
 
     buildFeatures {
@@ -35,10 +35,12 @@ dependencies {
     implementation("androidx.compose.material:material-icons-extended")
     implementation(libs.androidx.activity.compose)
     implementation(libs.androidx.navigation.compose)
-    implementation(project(":core:database"))
     implementation(libs.androidx.room.runtime)
+    implementation(project(":core:database"))
     implementation(project(":feature:catalog"))
     implementation(project(":feature:configurator"))
     implementation(project(":feature:liquids"))
     implementation(project(":feature:settings"))
+    implementation(project(":feature:batteries"))
+    debugImplementation("androidx.compose.ui:ui-tooling")
 }
