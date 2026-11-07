@@ -1,0 +1,8 @@
+<resources>
+    <string name="configurator_intro">Manage pre-built coils and prepare the rebuildable coil calculator.</string>
+    <string name="configurator_prefab">Pre-built coils</string>
+    <string name="configurator_rebuildable">Rebuildable</string>
+    <string name="configurator_safety_title">Estimate only</string>
+    <string name="configurator_safety_body">A calculation never certifies a build as safe. Independently verify the actual resistance, batteries, and hardware limits before use.</string>
+    <string name="back">Back</string>
+</resources>

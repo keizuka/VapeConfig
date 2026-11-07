@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">VapeConfig</string>
+    <string name="dashboard_title">Tableau de bord</string>
+    <string name="dashboard_welcome">Votre matériel, vos recettes et vos configurations.</string>
+    <string name="catalog_title">Catalogue</string>
+    <string name="catalog_summary">Parcourir les atomiseurs, box et accessoires</string>
+    <string name="configurator_title">Configurateur</string>
+    <string name="configurator_summary">Préfabriquées et reconstructibles</string>
+    <string name="liquids_title">Liquides</string>
+    <string name="liquids_summary">Gérer vos recettes et ingrédients</string>
+    <string name="settings_title">Paramètres</string>
+    <string name="settings_summary">Données locales et mises à jour</string>
+    <string name="coming_soon">Cette section sera développée dans une prochaine étape.</string>
+    <string name="back">Retour</string>
+</resources>

@@ -1,0 +1,6 @@
+<resources>
+    <string name="catalog_intro">Un catalogue mixte qui réunira vos éléments enregistrés localement et les références du catalogue partagé.</string>
+    <string name="catalog_local">Éléments locaux</string>
+    <string name="catalog_remote">Catalogue partagé</string>
+    <string name="back">Retour</string>
+</resources>

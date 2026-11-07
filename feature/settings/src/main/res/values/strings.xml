@@ -1,0 +1,12 @@
+<resources>
+    <string name="settings_updates">Mises à jour</string>
+    <string name="settings_check_updates">Vérifier les mises à jour</string>
+    <string name="settings_checking">Vérification en cours…</string>
+    <string name="settings_latest_version">Dernière version : %1$s</string>
+    <string name="settings_update_available">Mise à jour disponible : %1$s</string>
+    <string name="settings_up_to_date">Votre version (%1$s) est à jour.</string>
+    <string name="settings_no_release">Aucune release publique disponible pour le moment.</string>
+    <string name="settings_update_error">Impossible de vérifier les mises à jour. Réessayez plus tard.</string>
+    <string name="settings_open_release">Ouvrir la page de la release</string>
+    <string name="back">Retour</string>
+</resources>

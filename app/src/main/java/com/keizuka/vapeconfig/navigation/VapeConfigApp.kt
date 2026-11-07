@@ -1,0 +1,53 @@
+package com.keizuka.vapeconfig.navigation
+
+import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.Scaffold
+import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
+import androidx.navigation.NavType
+import androidx.navigation.compose.NavHost
+import androidx.navigation.compose.composable
+import androidx.navigation.compose.rememberNavController
+import androidx.navigation.navArgument
+import com.keizuka.vapeconfig.R
+import com.keizuka.vapeconfig.ui.DashboardScreen
+import com.keizuka.vapeconfig.ui.Section
+import com.keizuka.vapeconfig.feature.catalog.CatalogScreen
+import com.keizuka.vapeconfig.feature.configurator.ConfiguratorScreen
+import com.keizuka.vapeconfig.feature.liquids.LiquidsScreen
+import com.keizuka.vapeconfig.feature.settings.SettingsScreen
+import com.keizuka.vapeconfig.BuildConfig
+
+private object Routes {
+    const val Dashboard = "dashboard"
+    const val Section = "section/{section}"
+    fun section(name: String) = "section/$name"
+}
+
+@Composable
+fun VapeConfigApp() {
+    val navController = rememberNavController()
+    Scaffold { padding ->
+        NavHost(
+            navController = navController,
+            startDestination = Routes.Dashboard,
+            modifier = Modifier.padding(padding),
+        ) {
+            composable(Routes.Dashboard) {
+                DashboardScreen(onOpenSection = { navController.navigate(Routes.section(it.route)) })
+            }
+            composable(
+                route = Routes.Section,
+                arguments = listOf(navArgument("section") { type = NavType.StringType }),
+            ) { entry ->
+                val key = entry.arguments?.getString("section")
+                when (key) {
+                    Section.Catalog.route -> CatalogScreen { navController.popBackStack() }
+                    Section.Configurator.route -> ConfiguratorScreen { navController.popBackStack() }
+                    Section.Liquids.route -> LiquidsScreen { navController.popBackStack() }
+                    Section.Settings.route -> SettingsScreen(BuildConfig.VERSION_NAME) { navController.popBackStack() }
+                }
+            }
+        }
+    }
+}

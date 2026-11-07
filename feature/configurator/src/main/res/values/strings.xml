@@ -1,0 +1,8 @@
+<resources>
+    <string name="configurator_intro">Gérez les résistances préfabriquées et préparez le calculateur reconstructible.</string>
+    <string name="configurator_prefab">Résistances préfabriquées</string>
+    <string name="configurator_rebuildable">Reconstructibles</string>
+    <string name="configurator_safety_title">Estimation uniquement</string>
+    <string name="configurator_safety_body">Le calcul ne certifie jamais la sécurité d’un montage. Vérifiez indépendamment la résistance réelle, les accus et les limites du matériel avant toute utilisation.</string>
+    <string name="back">Retour</string>
+</resources>

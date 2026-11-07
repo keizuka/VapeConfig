@@ -1,0 +1,6 @@
+<resources>
+    <string name="liquids_intro">Créez vos recettes, gérez les ingrédients et conservez vos mélanges sur cet appareil.</string>
+    <string name="liquids_recipes">Mes recettes</string>
+    <string name="liquids_ingredients">Ingrédients</string>
+    <string name="back">Retour</string>
+</resources>
