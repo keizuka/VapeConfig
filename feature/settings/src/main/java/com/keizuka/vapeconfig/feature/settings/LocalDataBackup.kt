@@ -94,14 +94,12 @@ private fun JSONArray.objects(): List<JSONObject> =
 internal suspend fun VapeConfigDatabase.restoreAdditively(backup: BackupContents): RestoreCounts =
     withTransaction {
         val existingCatalogIds = catalogItems().getAll().mapTo(mutableSetOf()) { it.id }
-        var nextCatalogId = existingCatalogIds.size
         backup.catalog.forEach { item ->
             var id = item.id
             if (!existingCatalogIds.add(id)) {
                 do { id = "import-${UUID.randomUUID()}" } while (!existingCatalogIds.add(id))
             }
             catalogItems().save(item.copy(id = id))
-            nextCatalogId++
         }
         backup.recipes.forEach { liquidRecipes().insert(it.copy(id = 0)) }
         backup.coils.forEach { coilConfigurations().insert(it.copy(id = 0)) }
