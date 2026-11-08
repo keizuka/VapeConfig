@@ -1,5 +1,7 @@
 package com.keizuka.vapeconfig.feature.catalog
 
+import android.webkit.WebView
+import android.webkit.WebViewClient
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -12,12 +14,14 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
+import androidx.compose.material3.AssistChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Tab
 import androidx.compose.material3.TabRow
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
+import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -34,6 +38,7 @@ import com.keizuka.vapeconfig.core.compatibility.checkConnectorCompatibility
 import com.keizuka.vapeconfig.core.database.CatalogItemDao
 import com.keizuka.vapeconfig.core.database.CatalogItemEntity
 import kotlinx.coroutines.launch
+import java.net.URLEncoder
 import java.text.Normalizer
 import java.util.Locale
 import java.util.UUID
@@ -51,6 +56,8 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
     var entries by remember { mutableStateOf(emptyList<CatalogItemEntity>()) }
     var shared by remember { mutableStateOf(SharedCatalogItem.builtInCatalog) }
     var query by remember { mutableStateOf("") }
+    var webQuery by remember { mutableStateOf("") }
+    var webSearchUrl by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(false) }
     var sharedError by remember { mutableStateOf(false) }
     var selectedShared by remember { mutableStateOf<SharedCatalogItem?>(null) }
@@ -78,6 +85,7 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
         TabRow(selectedTabIndex = selectedTab) {
             Tab(selectedTab == 0, { selectedTab = 0 }, text = { Text(stringResource(R.string.catalog_shared_tab)) })
             Tab(selectedTab == 1, { selectedTab = 1 }, text = { Text(stringResource(R.string.catalog_local_tab)) })
+            Tab(selectedTab == 2, { selectedTab = 2 }, text = { Text(stringResource(R.string.catalog_web_tab)) })
         }
         if (selectedTab == 0) {
             TextButton(onClick = { refreshShared() }, enabled = !loading) {
@@ -103,6 +111,59 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
                             if (item.sourceUrl.isNotBlank()) TextButton(onClick = { uriHandler.openUri(item.sourceUrl) }) { Text(stringResource(R.string.catalog_source)) }
                         }
                     }
+                }
+            }
+        } else if (selectedTab == 2) {
+            Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Text(
+                    stringResource(R.string.catalog_web_intro),
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+                OutlinedTextField(
+                    value = webQuery,
+                    onValueChange = { webQuery = it },
+                    label = { Text(stringResource(R.string.catalog_web_search)) },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    listOf(
+                        R.string.catalog_web_box to "box cigarette électronique",
+                        R.string.catalog_web_atomizer to "atomiseur",
+                        R.string.catalog_web_clearomizer to "clearomiseur",
+                    ).forEach { (label, term) ->
+                        AssistChip(
+                            onClick = { webQuery = term },
+                            label = { Text(stringResource(label)) },
+                        )
+                    }
+                }
+                Button(
+                    onClick = {
+                        val term = webQuery.trim()
+                        if (term.isNotEmpty()) {
+                            val encoded = URLEncoder.encode(term, "UTF-8")
+                            webSearchUrl = "https://duckduckgo.com/?q=$encoded"
+                        }
+                    },
+                    enabled = webQuery.isNotBlank(),
+                    modifier = Modifier.fillMaxWidth(),
+                ) { Text(stringResource(R.string.catalog_web_submit)) }
+                webSearchUrl?.let { url ->
+                    AndroidView(
+                        factory = { context ->
+                            WebView(context).apply {
+                                webViewClient = WebViewClient()
+                                settings.javaScriptEnabled = true
+                                settings.domStorageEnabled = true
+                                loadUrl(url)
+                            }
+                        },
+                        update = { view ->
+                            if (view.url != url) view.loadUrl(url)
+                        },
+                        modifier = Modifier.fillMaxSize(),
+                    )
                 }
             }
         } else {
