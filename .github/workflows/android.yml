@@ -19,6 +19,9 @@ permissions:
 jobs:
   assemble:
     runs-on: ubuntu-latest
+    env:
+      VAPECONFIG_KEYSTORE_BASE64: ${{ secrets.VAPECONFIG_KEYSTORE_BASE64 }}
+      VAPECONFIG_KEYSTORE_PASSWORD: ${{ secrets.VAPECONFIG_KEYSTORE_PASSWORD }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -31,10 +34,17 @@ jobs:
         uses: gradle/actions/setup-gradle@v4
         with:
           gradle-version: '8.13'
-      - name: Build debug APK
-        run: gradle --no-daemon assembleDebug
+      - name: Prepare release signing key
+        run: |
+          test -n "$VAPECONFIG_KEYSTORE_BASE64"
+          test -n "$VAPECONFIG_KEYSTORE_PASSWORD"
+          printf '%s' "$VAPECONFIG_KEYSTORE_BASE64" | base64 --decode > "$RUNNER_TEMP/vapeconfig-release.p12"
+          chmod 600 "$RUNNER_TEMP/vapeconfig-release.p12"
+          echo "VAPECONFIG_KEYSTORE_PATH=$RUNNER_TEMP/vapeconfig-release.p12" >> "$GITHUB_ENV"
+      - name: Build signed release APK
+        run: gradle --no-daemon assembleRelease
       - name: Prepare APK asset
-        run: cp app/build/outputs/apk/debug/app-debug.apk VapeConfig-debug.apk
+        run: cp app/build/outputs/apk/release/app-release.apk VapeConfig.apk
 
       - name: Compare APK signing certificate with latest release
         env:
@@ -42,9 +52,16 @@ jobs:
         run: |
           apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)"
           mkdir -p "$RUNNER_TEMP/latest-release"
-          if gh release download --repo "$GITHUB_REPOSITORY" --pattern VapeConfig-debug.apk --dir "$RUNNER_TEMP/latest-release"; then
-            current_info="$("$apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk 2>&1)"
-            previous_info="$("$apksigner" verify --print-certs "$RUNNER_TEMP/latest-release/VapeConfig-debug.apk" 2>&1)"
+          if gh release download --repo "$GITHUB_REPOSITORY" --pattern VapeConfig.apk --dir "$RUNNER_TEMP/latest-release"; then
+            previous_apk="$RUNNER_TEMP/latest-release/VapeConfig.apk"
+          elif gh release download --repo "$GITHUB_REPOSITORY" --pattern VapeConfig-debug.apk --dir "$RUNNER_TEMP/latest-release"; then
+            previous_apk="$RUNNER_TEMP/latest-release/VapeConfig-debug.apk"
+          else
+            previous_apk=""
+          fi
+          if [[ -n "$previous_apk" ]]; then
+            current_info="$("$apksigner" verify --print-certs app/build/outputs/apk/release/app-release.apk 2>&1)"
+            previous_info="$("$apksigner" verify --print-certs "$previous_apk" 2>&1)"
             current_cert="$(printf '%s\n' "$current_info" | grep -F 'certificate SHA-256 digest:' | tail -n 1 | awk '{print $NF}')"
             previous_cert="$(printf '%s\n' "$previous_info" | grep -F 'certificate SHA-256 digest:' | tail -n 1 | awk '{print $NF}')"
             echo "Current APK certificate: $current_cert"
@@ -52,7 +69,7 @@ jobs:
             if [[ -n "$current_cert" && "$current_cert" == "$previous_cert" ]]; then
               echo "Signing certificate matches; Android can update the existing installation."
             else
-              echo "::warning::Signing certificate differs from the latest release. Android will not install this APK over that installation."
+              echo "::warning::The first stable-key release cannot replace the previous APK. Future releases will match this key."
               printf '%s\n' "$current_info"
               printf '%s\n' "$previous_info"
             fi
@@ -62,8 +79,8 @@ jobs:
       - name: Upload signed release APK
         uses: actions/upload-artifact@v4
         with:
-          name: VapeConfig-debug
-          path: VapeConfig-debug.apk
+          name: VapeConfig-release
+          path: VapeConfig.apk
           if-no-files-found: error
 
   publish-release:
@@ -78,7 +95,7 @@ jobs:
       - name: Download APK
         uses: actions/download-artifact@v4
         with:
-          name: VapeConfig-debug
+          name: VapeConfig-release
           path: release-assets
       - name: Publish GitHub release
         env:
@@ -93,7 +110,7 @@ jobs:
             echo "Release $RELEASE_VERSION already exists"
             exit 1
           fi
-          gh release create "$RELEASE_VERSION" release-assets/VapeConfig-debug.apk \
+          gh release create "$RELEASE_VERSION" release-assets/VapeConfig.apk \
             --target main \
             --title "VapeConfig $RELEASE_VERSION" \
-            --notes "VapeConfig $RELEASE_VERSION ajoute le téléchargement intégré des APK, leur vérification d’intégrité et l’ouverture de l’installateur Android avec confirmation de l’utilisateur. Elle corrige aussi la recherche du catalogue (accents et synonymes), permet d’ouvrir les fiches au toucher et conserve un catalogue consultable hors ligne. Elle comprend également les profils de batteries intégrées et amovibles, le catalogue local et partagé, le calculateur de mélange PG/VG/nicotine, et l’estimateur théorique de résistance pour fil simple. Les données personnelles restent sur l’appareil. La compatibilité compare uniquement les connecteurs saisis et ne valide ni les dimensions, ni l’électronique, ni la sécurité. Les estimations de résistance ne prouvent pas qu’un montage est sûr : mesure et vérification indépendante indispensables. Cette APK est une version debug non signée pour distribution de production ; Android peut afficher un avertissement à l’installation."
+            --notes "VapeConfig $RELEASE_VERSION ajoute la sauvegarde et la restauration additive des fiches, recettes, coils et profils de batteries, le téléchargement intégré des APK, leur vérification d’intégrité et l’ouverture de l’installateur Android avec confirmation de l’utilisateur. L’APK est signé avec une clé stable pour permettre les mises à jour futures. Comme cette clé diffère de celle de v0.2.1, désinstallez v0.2.1 avant la première installation de cette release; les prochaines versions pourront se mettre à jour directement. Elle corrige aussi la recherche du catalogue (accents et synonymes), permet d’ouvrir les fiches au toucher et conserve un catalogue consultable hors ligne. Elle comprend le catalogue local et partagé, les batteries intégrées et amovibles, les recettes liquides, le configurateur de coils et l’estimation théorique de résistance pour fil simple. Les données personnelles restent sur l’appareil. La compatibilité compare uniquement les connecteurs saisis et ne valide ni les dimensions, ni l’électronique, ni la sécurité. Une estimation de résistance ne prouve pas qu’un montage est sûr : mesure et vérification indépendante indispensables."
