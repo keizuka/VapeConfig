@@ -16,6 +16,26 @@ android {
         versionName = "0.2.2"
     }
 
+    signingConfigs {
+        create("release") {
+            val keystorePath = System.getenv("VAPECONFIG_KEYSTORE_PATH")
+            if (!keystorePath.isNullOrBlank()) {
+                storeFile = file(keystorePath)
+                storePassword = System.getenv("VAPECONFIG_KEYSTORE_PASSWORD")
+                keyAlias = "vapeconfig-release"
+                keyPassword = System.getenv("VAPECONFIG_KEYSTORE_PASSWORD")
+                storeType = "PKCS12"
+            }
+        }
+    }
+
+    buildTypes {
+        getByName("release") {
+            isMinifyEnabled = false
+            signingConfig = signingConfigs.getByName("release")
+        }
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
