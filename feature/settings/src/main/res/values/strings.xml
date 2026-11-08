@@ -10,5 +10,16 @@
     <string name="settings_open_release">Ouvrir la page de la release</string>
     <string name="settings_download_apk">Télécharger l’APK</string>
     <string name="settings_manual_install">Android ouvrira le téléchargement. L’installation doit être confirmée sur l’appareil.</string>
+    <string name="settings_download_description">Téléchargement de la mise à jour VapeConfig</string>
+    <string name="settings_download_progress">Téléchargement : %1$d%%</string>
+    <string name="settings_download_complete">Téléchargement terminé. Vérifiez et installez la mise à jour.</string>
+    <string name="settings_download_failed">Le téléchargement a échoué. Vérifiez votre connexion puis réessayez.</string>
+    <string name="settings_install_update">Installer la mise à jour</string>
+    <string name="settings_no_apk">Cette release ne contient pas d’APK téléchargeable.</string>
+    <string name="settings_integrity_error">La vérification d’intégrité de l’APK a échoué. L’installation est bloquée.</string>
+    <string name="settings_signature_mismatch">Cette APK ne peut pas remplacer l’application installée, car sa signature est différente. Conservez vos données avant une réinstallation manuelle.</string>
+    <string name="settings_install_permission">Autorisez VapeConfig à installer cette mise à jour dans les réglages Android, puis revenez ici et appuyez de nouveau sur Installer.</string>
+    <string name="settings_install_failed">Android n’a pas pu ouvrir l’installateur. Réessayez ou utilisez la page de release.</string>
+    <string name="settings_install_note">Le téléchargement se fait ici. Android demande votre confirmation finale; l’application ne s’installe pas en silence.</string>
     <string name="back">Retour</string>
 </resources>
