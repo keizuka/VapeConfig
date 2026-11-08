@@ -1,12 +1,15 @@
 package com.keizuka.vapeconfig.feature.catalog
 
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.MaterialTheme
@@ -31,6 +34,8 @@ import com.keizuka.vapeconfig.core.compatibility.checkConnectorCompatibility
 import com.keizuka.vapeconfig.core.database.CatalogItemDao
 import com.keizuka.vapeconfig.core.database.CatalogItemEntity
 import kotlinx.coroutines.launch
+import java.text.Normalizer
+import java.util.Locale
 import java.util.UUID
 
 @Composable
@@ -44,10 +49,12 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
     var connection by remember { mutableStateOf("") }
     var notes by remember { mutableStateOf("") }
     var entries by remember { mutableStateOf(emptyList<CatalogItemEntity>()) }
-    var shared by remember { mutableStateOf(emptyList<SharedCatalogItem>()) }
+    var shared by remember { mutableStateOf(SharedCatalogItem.builtInCatalog) }
     var query by remember { mutableStateOf("") }
     var loading by remember { mutableStateOf(false) }
     var sharedError by remember { mutableStateOf(false) }
+    var selectedShared by remember { mutableStateOf<SharedCatalogItem?>(null) }
+    var selectedLocal by remember { mutableStateOf<CatalogItemEntity?>(null) }
     var deviceConnector by remember { mutableStateOf("") }
     var atomizerConnector by remember { mutableStateOf("") }
     var compatibility by remember { mutableStateOf<CompatibilityStatus?>(null) }
@@ -77,20 +84,23 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
                 Text(stringResource(if (loading) R.string.catalog_loading else R.string.catalog_refresh))
             }
             OutlinedTextField(query, { query = it }, label = { Text(stringResource(R.string.catalog_search)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
-            when {
-                loading && shared.isEmpty() -> Text(stringResource(R.string.catalog_loading), modifier = Modifier.padding(12.dp))
-                sharedError && shared.isEmpty() -> Text(stringResource(R.string.catalog_shared_error), color = MaterialTheme.colorScheme.error, modifier = Modifier.padding(12.dp))
-                else -> LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxSize()) {
-                    val filtered = shared.filter { "${it.name} ${it.category} ${it.description}".contains(query, ignoreCase = true) }
-                    if (filtered.isEmpty() && !loading && !sharedError) item { Text(stringResource(R.string.catalog_shared_empty)) }
-                    items(filtered, key = { it.id }) { item ->
-                        Card(Modifier.fillMaxWidth()) {
-                            Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
-                                Text(item.name, style = MaterialTheme.typography.titleMedium)
-                                Text(item.category, style = MaterialTheme.typography.labelMedium)
-                                Text(item.description, style = MaterialTheme.typography.bodyMedium)
-                                if (item.sourceUrl.isNotBlank()) TextButton(onClick = { uriHandler.openUri(item.sourceUrl) }) { Text(stringResource(R.string.catalog_source)) }
-                            }
+            if (sharedError) {
+                Text(stringResource(R.string.catalog_offline_fallback), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 6.dp))
+            }
+            LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxSize()) {
+                val normalizedQuery = normalizeForSearch(query)
+                val filtered = shared.filter { item ->
+                    normalizeForSearch(item.name + " " + item.category + " " + item.description + " " + item.searchTerms + " " + item.id + " " + item.sourceUrl)
+                        .contains(normalizedQuery)
+                }
+                if (filtered.isEmpty() && !loading) item { Text(stringResource(R.string.catalog_shared_empty), modifier = Modifier.padding(12.dp)) }
+                items(filtered, key = { it.id }) { item ->
+                    Card(Modifier.fillMaxWidth().clickable { selectedShared = item }) {
+                        Column(Modifier.padding(16.dp), verticalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Text(item.name, style = MaterialTheme.typography.titleMedium)
+                            TextButton(onClick = { query = item.category }) { Text(item.category) }
+                            Text(item.description, style = MaterialTheme.typography.bodyMedium)
+                            if (item.sourceUrl.isNotBlank()) TextButton(onClick = { uriHandler.openUri(item.sourceUrl) }) { Text(stringResource(R.string.catalog_source)) }
                         }
                     }
                 }
@@ -138,10 +148,10 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
                 }
                 if (entries.isEmpty()) item { Text(stringResource(R.string.catalog_empty)) }
                 items(entries, key = { it.id }) { item ->
-                    Card(Modifier.fillMaxWidth()) {
+                    Card(Modifier.fillMaxWidth().clickable { selectedLocal = item }) {
                         Column(Modifier.padding(16.dp)) {
                             Text(item.name, style = MaterialTheme.typography.titleMedium)
-                            Text(item.category, style = MaterialTheme.typography.labelMedium)
+                            TextButton(onClick = { query = item.category; selectedTab = 0 }) { Text(item.category) }
                             if (item.connection.isNotBlank()) Text(stringResource(R.string.catalog_connection_value, item.connection))
                             if (item.notes.isNotBlank()) Text(item.notes, style = MaterialTheme.typography.bodyMedium, modifier = Modifier.padding(top = 6.dp))
                             TextButton(onClick = { scope.launch { dao.delete(item.id); refreshLocal() } }) { Text(stringResource(R.string.catalog_delete)) }
@@ -151,4 +161,46 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
             }
         }
     }
+
+    selectedShared?.let { item ->
+        AlertDialog(
+            onDismissRequest = { selectedShared = null },
+            title = { Text(item.name) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(item.category, style = MaterialTheme.typography.labelLarge)
+                    Text(item.description)
+                    if (item.searchTerms.isNotBlank()) Text(item.searchTerms, style = MaterialTheme.typography.bodySmall)
+                }
+            },
+            confirmButton = {
+                Row {
+                    if (item.sourceUrl.isNotBlank()) TextButton(onClick = { uriHandler.openUri(item.sourceUrl) }) { Text(stringResource(R.string.catalog_source)) }
+                    TextButton(onClick = { selectedShared = null }) { Text(stringResource(R.string.catalog_close)) }
+                }
+            },
+        )
+    }
+
+    selectedLocal?.let { item ->
+        AlertDialog(
+            onDismissRequest = { selectedLocal = null },
+            title = { Text(item.name) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(item.category, style = MaterialTheme.typography.labelLarge)
+                    if (item.connection.isNotBlank()) Text(stringResource(R.string.catalog_connection_value, item.connection))
+                    if (item.notes.isNotBlank()) Text(item.notes)
+                }
+            },
+            confirmButton = {
+                TextButton(onClick = { selectedLocal = null }) { Text(stringResource(R.string.catalog_close)) }
+            },
+        )
+    }
 }
+
+private fun normalizeForSearch(value: String): String =
+    Normalizer.normalize(value, Normalizer.Form.NFD)
+        .replace(Regex("\\p{M}+"), "")
+        .lowercase(Locale.ROOT)
