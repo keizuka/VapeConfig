@@ -52,7 +52,7 @@ class SharedCatalogRepository(
                     sourceUrl = item.optString("source_url"),
                     searchTerms = item.optString("search_terms"),
                 )
-            }.ifEmpty { builtInCatalog }
+            }.ifEmpty { SharedCatalogItem.builtInCatalog }
         } finally {
             connection.disconnect()
         }
