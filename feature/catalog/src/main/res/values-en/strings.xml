@@ -1,22 +1,24 @@
 <resources>
     <string name="catalog_title">Shared catalog</string>
-    <string name="catalog_intro">Browse the shared catalogue or manage local records stored on this device.</string>
+    <string name="catalog_intro">Browse the shared catalog or manage local entries stored on this device.</string>
     <string name="catalog_shared_tab">Shared</string>
-    <string name="catalog_local_tab">My records</string>
-    <string name="catalog_refresh">Refresh shared catalogue</string>
+    <string name="catalog_local_tab">My entries</string>
+    <string name="catalog_refresh">Refresh shared catalog</string>
     <string name="catalog_loading">Loading…</string>
     <string name="catalog_search">Search</string>
-    <string name="catalog_shared_error">Shared catalogue unavailable. Check your connection and try again.</string>
-    <string name="catalog_shared_empty">No references match this search.</string>
+    <string name="catalog_shared_error">Shared catalog unavailable. Check the connection and try again.</string>
+    <string name="catalog_shared_empty">No entries match this search.</string>
+    <string name="catalog_offline_fallback">No connection: built-in entries are still available offline.</string>
     <string name="catalog_source">Source</string>
-    <string name="catalog_add_title">Add a local record</string>
+    <string name="catalog_close">Close</string>
+    <string name="catalog_add_title">Add a local entry</string>
     <string name="catalog_name">Name</string>
     <string name="catalog_category">Category</string>
     <string name="catalog_connection">Connector (optional)</string>
     <string name="catalog_connection_value">Connector: %1$s</string>
     <string name="catalog_notes">Notes</string>
     <string name="catalog_save">Save</string>
-    <string name="catalog_empty">No local records saved.</string>
+    <string name="catalog_empty">No local entries saved.</string>
     <string name="catalog_delete">Delete</string>
     <string name="compatibility_title">Check connector</string>
     <string name="compatibility_device_connector">Device connector</string>
@@ -25,6 +27,6 @@
     <string name="compatibility_matching">Connectors match.</string>
     <string name="compatibility_different">Connectors differ.</string>
     <string name="compatibility_unknown">Enter both connectors to compare them.</string>
-    <string name="compatibility_limit">This comparison only checks the entered text. It does not verify dimensions, clearance, electronics, or safety.</string>
+    <string name="compatibility_limit">This comparison checks only the entered text. It does not verify dimensions, clearance, electronics, or safety.</string>
     <string name="back">Back</string>
 </resources>
