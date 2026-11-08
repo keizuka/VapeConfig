@@ -1,10 +1,10 @@
 [
-  {"id":"removable-cell","name":"Accumulateur amovible","category":"Batteries","description":"Référence générique. Notez le format et les caractéristiques uniquement à partir de la documentation du fabricant correspondant au modèle exact."},
-  {"id":"integrated-cell","name":"Batterie intégrée","category":"Batteries","description":"Référence générique pour un appareil à batterie intégrée. Consultez le manuel de l’appareil pour ses caractéristiques et consignes."},
-  {"id":"mod-device","name":"Mod électronique","category":"Appareils","description":"Fiche de classement. Les plages électriques et compatibilités doivent être vérifiées dans le manuel du modèle exact."},
-  {"id":"tank-device","name":"Atomiseur / clearomiseur","category":"Atomiseurs","description":"Fiche de classement. Vérifiez le raccord, le dégagement mécanique et les consignes du fabricant."},
-  {"id":"prefab-coil","name":"Résistance préfabriquée","category":"Résistances","description":"Notez la référence et la plage d’utilisation indiquée par les fabricants de la résistance et de l’appareil."},
-  {"id":"rebuildable-coil","name":"Coil reconstructible","category":"Résistances","description":"Une estimation théorique ne remplace jamais la mesure réelle ni une vérification indépendante."},
-  {"id":"liquid-base","name":"Bases PG / VG","category":"Liquides","description":"Consignez les concentrations, supports et références exactes figurant sur l’étiquette."},
-  {"id":"flavors","name":"Arômes","category":"Liquides","description":"Suivez les consignes et proportions données par le fabricant de chaque arôme."}
+  {"id":"removable-cell","name":"Accumulateur amovible","category":"Batteries","description":"Fiche générique : vérifiez le format et les caractéristiques dans la documentation du fabricant du modèle exact.","search_terms":"accu batterie cellule removable battery cell 18650 20700 21700"},
+  {"id":"integrated-cell","name":"Batterie intégrée","category":"Batteries","description":"Fiche générique pour les appareils à batterie intégrée. Consultez le manuel de l’appareil pour ses caractéristiques.","search_terms":"accu batterie interne incorporée integrated built-in"},
+  {"id":"mod-device","name":"Mod électronique","category":"Appareils","description":"Fiche de classement. Consultez le manuel du modèle exact pour ses fonctions et ses caractéristiques.","search_terms":"box appareil cigarette électronique mod électronique device"},
+  {"id":"tank-device","name":"Atomiseur / clearomiseur","category":"Atomiseurs","description":"Fiche de classement. Vérifiez le raccord et les consignes du fabricant du modèle exact.","search_terms":"tank atomizer atomiseur clearomiseur réservoir"},
+  {"id":"prefab-coil","name":"Résistance préfabriquée","category":"Résistances","description":"Notez la référence et les indications du fabricant de la résistance et de l’appareil.","search_terms":"coil tête résistance commerciale prefabricated head"},
+  {"id":"rebuildable-coil","name":"Coil reconstructible","category":"Résistances","description":"Une estimation théorique ne remplace jamais la mesure réelle ni une vérification indépendante.","search_terms":"reconstructible rba rda rta fil coil"},
+  {"id":"liquid-base","name":"Bases PG / VG","category":"Liquides","description":"Consignez les concentrations et les références exactes figurant sur l’étiquette.","search_terms":"propylène glycol glycérine végétale base e-liquide ejuice pg vg"},
+  {"id":"flavors","name":"Arômes","category":"Liquides","description":"Suivez les consignes et proportions indiquées par le fabricant de chaque arôme.","search_terms":"arôme arômes flavor flavour concentré concentrate"}
 ]
