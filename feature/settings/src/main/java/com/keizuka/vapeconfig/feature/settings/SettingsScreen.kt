@@ -9,10 +9,13 @@ import android.net.Uri
 import android.os.Build
 import android.os.Environment
 import android.provider.Settings
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
+import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
@@ -30,6 +33,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.keizuka.vapeconfig.core.database.VapeConfigDatabase
 import com.keizuka.vapeconfig.core.updater.GitHubReleaseChecker
 import com.keizuka.vapeconfig.core.updater.ReleaseInfo
 import kotlinx.coroutines.Dispatchers
@@ -46,7 +50,7 @@ private const val PREF_DOWNLOAD_VERSION = "download_version"
 private const val APK_MIME_TYPE = "application/vnd.android.package-archive"
 
 @Composable
-fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
+fun SettingsScreen(installedVersion: String, database: VapeConfigDatabase, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
     val context = LocalContext.current
     val checker = remember { GitHubReleaseChecker() }
@@ -63,6 +67,36 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
     var downloadComplete by remember { mutableStateOf(false) }
     var downloadProgress by remember { mutableIntStateOf(0) }
     var updateMessage by remember { mutableIntStateOf(0) }
+    var backupMessage by remember { mutableStateOf<String?>(null) }
+    var pendingBackup by remember { mutableStateOf<BackupContents?>(null) }
+    val exportLauncher = rememberLauncherForActivityResult(ActivityResultContracts.CreateDocument("application/json")) { uri ->
+        if (uri != null) scope.launch {
+            try {
+                val json = withContext(Dispatchers.IO) { database.createBackupJson() }
+                withContext(Dispatchers.IO) {
+                    context.contentResolver.openOutputStream(uri, "wt")?.bufferedWriter()?.use { it.write(json) }
+                        ?: error("Impossible d’écrire le fichier.")
+                }
+                backupMessage = context.getString(R.string.settings_backup_saved)
+            } catch (_: Exception) {
+                backupMessage = context.getString(R.string.settings_backup_error)
+            }
+        }
+    }
+    val importLauncher = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        if (uri != null) scope.launch {
+            try {
+                val json = withContext(Dispatchers.IO) {
+                    context.contentResolver.openInputStream(uri)?.bufferedReader()?.use { it.readText() }
+                        ?: error("Impossible de lire le fichier.")
+                }
+                pendingBackup = parseBackupJson(json)
+                backupMessage = null
+            } catch (_: Exception) {
+                backupMessage = context.getString(R.string.settings_backup_invalid)
+            }
+        }
+    }
 
     LaunchedEffect(downloadId) {
         val id = downloadId ?: return@LaunchedEffect
@@ -89,6 +123,15 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
 
     Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         TextButton(onClick = onBack) { Text("‹  " + stringResource(R.string.back)) }
+        Text(stringResource(R.string.settings_data_title), style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(R.string.settings_data_description), style = MaterialTheme.typography.bodyMedium)
+        Button(onClick = { exportLauncher.launch("VapeConfig-sauvegarde.json") }) {
+            Text(stringResource(R.string.settings_backup_export))
+        }
+        Button(onClick = { importLauncher.launch(arrayOf("application/json", "text/json", "text/plain")) }) {
+            Text(stringResource(R.string.settings_backup_import))
+        }
+        backupMessage?.let { Text(it, color = MaterialTheme.colorScheme.error) }
         Text(stringResource(R.string.settings_updates), style = MaterialTheme.typography.headlineMedium)
         Button(
             enabled = !checking,
@@ -222,6 +265,37 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
         }
         if (updateMessage != 0) {
             Text(stringResource(updateMessage), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
+        }
+        pendingBackup?.let { backup ->
+            AlertDialog(
+                onDismissRequest = { pendingBackup = null },
+                title = { Text(stringResource(R.string.settings_backup_confirm_title)) },
+                text = { Text(stringResource(
+                    R.string.settings_backup_confirm_body,
+                    backup.catalog.size, backup.recipes.size, backup.coils.size, backup.batteries.size,
+                )) },
+                confirmButton = {
+                    TextButton(onClick = {
+                        pendingBackup = null
+                        scope.launch {
+                            try {
+                                val counts = withContext(Dispatchers.IO) { database.restoreAdditively(backup) }
+                                backupMessage = context.getString(
+                                    R.string.settings_backup_restored,
+                                    counts.catalog, counts.recipes, counts.coils, counts.batteries,
+                                )
+                            } catch (_: Exception) {
+                                backupMessage = context.getString(R.string.settings_backup_error)
+                            }
+                        }
+                    }) { Text(stringResource(R.string.settings_backup_confirm)) }
+                },
+                dismissButton = {
+                    TextButton(onClick = { pendingBackup = null }) {
+                        Text(stringResource(R.string.settings_backup_cancel))
+                    }
+                },
+            )
         }
     }
 }
