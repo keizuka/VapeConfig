@@ -3,6 +3,13 @@
     <string name="catalog_intro">Parcourez le catalogue partagé ou gérez vos fiches locales, conservées sur cet appareil.</string>
     <string name="catalog_shared_tab">Partagé</string>
     <string name="catalog_local_tab">Mes fiches</string>
+    <string name="catalog_web_tab">Internet</string>
+    <string name="catalog_web_intro">Recherchez des modèles récents sur le Web. Les résultats s’affichent ici dans l’application.</string>
+    <string name="catalog_web_search">Box, atomiseur, clearomiseur…</string>
+    <string name="catalog_web_box">Box</string>
+    <string name="catalog_web_atomizer">Atomiseur</string>
+    <string name="catalog_web_clearomizer">Clearomiseur</string>
+    <string name="catalog_web_submit">Rechercher sur Internet</string>
     <string name="catalog_refresh">Actualiser le catalogue partagé</string>
     <string name="catalog_loading">Chargement…</string>
     <string name="catalog_search">Rechercher</string>
