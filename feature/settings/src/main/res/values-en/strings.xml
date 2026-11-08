@@ -10,5 +10,16 @@
     <string name="settings_open_release">Open release page</string>
     <string name="settings_download_apk">Download APK</string>
     <string name="settings_manual_install">Android will open the download. Installation must be confirmed on the device.</string>
+    <string name="settings_download_description">Downloading the VapeConfig update</string>
+    <string name="settings_download_progress">Download: %1$d%%</string>
+    <string name="settings_download_complete">Download complete. Review and install the update.</string>
+    <string name="settings_download_failed">Download failed. Check your connection and try again.</string>
+    <string name="settings_install_update">Install update</string>
+    <string name="settings_no_apk">This release does not include a downloadable APK.</string>
+    <string name="settings_integrity_error">The APK integrity check failed. Installation has been blocked.</string>
+    <string name="settings_signature_mismatch">This APK cannot replace the installed app because its signing certificate differs. Preserve your data before reinstalling manually.</string>
+    <string name="settings_install_permission">Allow VapeConfig to install this update in Android settings, then return here and tap Install again.</string>
+    <string name="settings_install_failed">Android could not open the installer. Try again or use the release page.</string>
+    <string name="settings_install_note">The APK downloads here. Android asks you to confirm the installation; the app never installs silently.</string>
     <string name="back">Back</string>
 </resources>
