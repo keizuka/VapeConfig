@@ -1,4 +1,16 @@
 <resources>
+    <string name="settings_data_title">Données enregistrées sur l’appareil</string>
+    <string name="settings_data_description">Exportez vos fiches, recettes, configurations de coils et profils de batteries dans un fichier. La restauration ajoute les éléments sans remplacer ceux déjà présents.</string>
+    <string name="settings_backup_export">Créer une sauvegarde</string>
+    <string name="settings_backup_import">Restaurer une sauvegarde</string>
+    <string name="settings_backup_saved">Sauvegarde enregistrée.</string>
+    <string name="settings_backup_error">La sauvegarde ou la restauration a échoué. Vos données existantes n’ont pas été supprimées.</string>
+    <string name="settings_backup_invalid">Ce fichier n’est pas une sauvegarde VapeConfig valide ou sa version n’est pas prise en charge.</string>
+    <string name="settings_backup_confirm_title">Ajouter les éléments de cette sauvegarde ?</string>
+    <string name="settings_backup_confirm_body">%1$d fiche(s), %2$d recette(s), %3$d configuration(s) de coil et %4$d profil(s) de batterie seront ajoutés. Les données déjà présentes seront conservées.</string>
+    <string name="settings_backup_confirm">Restaurer</string>
+    <string name="settings_backup_cancel">Annuler</string>
+    <string name="settings_backup_restored">Restauration terminée : %1$d fiche(s), %2$d recette(s), %3$d configuration(s) de coil et %4$d profil(s) de batterie ajoutés.</string>
     <string name="settings_updates">Mises à jour</string>
     <string name="settings_check_updates">Vérifier les mises à jour</string>
     <string name="settings_checking">Vérification en cours…</string>
