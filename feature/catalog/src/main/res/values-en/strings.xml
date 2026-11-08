@@ -3,6 +3,13 @@
     <string name="catalog_intro">Browse the shared catalog or manage local entries stored on this device.</string>
     <string name="catalog_shared_tab">Shared</string>
     <string name="catalog_local_tab">My entries</string>
+    <string name="catalog_web_tab">Web</string>
+    <string name="catalog_web_intro">Search for recent models on the web. Results are shown here in the app.</string>
+    <string name="catalog_web_search">Box mod, atomizer, tank…</string>
+    <string name="catalog_web_box">Box mod</string>
+    <string name="catalog_web_atomizer">Atomizer</string>
+    <string name="catalog_web_clearomizer">Tank</string>
+    <string name="catalog_web_submit">Search the web</string>
     <string name="catalog_refresh">Refresh shared catalog</string>
     <string name="catalog_loading">Loading…</string>
     <string name="catalog_search">Search</string>
