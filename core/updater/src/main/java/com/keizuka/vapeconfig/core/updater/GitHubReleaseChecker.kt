@@ -10,6 +10,7 @@ data class ReleaseInfo(
     val version: String,
     val pageUrl: String,
     val apkDownloadUrl: String?,
+    val apkSha256: String? = null,
 )
 
 /** Reads public release metadata only. The app never installs an APK automatically. */
@@ -32,13 +33,16 @@ class GitHubReleaseChecker(
             check(connection.responseCode in 200..299) { "GitHub API HTTP ${connection.responseCode}" }
             val json = JSONObject(connection.inputStream.bufferedReader().use { it.readText() })
             val version = json.optString("tag_name").removePrefix("v").ifBlank { return@withContext null }
-            val apkUrl = json.optJSONArray("assets")?.let { assets ->
+            val apkAsset = json.optJSONArray("assets")?.let { assets ->
                 (0 until assets.length()).asSequence()
                     .map { assets.getJSONObject(it) }
                     .firstOrNull { it.optString("name").endsWith(".apk", ignoreCase = true) }
-                    ?.optString("browser_download_url")
             }
-            ReleaseInfo(version, json.optString("html_url"), apkUrl)
+            val apkUrl = apkAsset?.optString("browser_download_url")?.takeIf { it.isNotBlank() }
+            val apkSha256 = apkAsset?.optString("digest")
+                ?.removePrefix("sha256:")
+                ?.takeIf { it.matches(Regex("[0-9a-fA-F]{64}")) }
+            ReleaseInfo(version, json.optString("html_url"), apkUrl, apkSha256)
         } finally {
             connection.disconnect()
         }
