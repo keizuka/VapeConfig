@@ -4,7 +4,7 @@ Application Android en français pour gérer son matériel de vape et ses recett
 
 ## Fonctions
 
-- Catalogue partagé consultable et fiches matérielles locales modifiables/supprimables.
+- Recherche Web intégrée pour trouver des box, atomiseurs, clearomiseurs, résistances et autres matériels; catalogue partagé consultable et fiches matérielles locales modifiables/supprimables.
 - Comparaison de texte des connecteurs pour signaler seulement s’ils concordent; cela ne constitue pas une vérification de compatibilité complète.
 - Profils de batteries intégrées et amovibles, avec références fabricant saisies par l’utilisateur.
 - Estimateur théorique de résistance pour fil rond (Kanthal A-1, Nichrome 80 et acier 316L) et fiches reconstructibles enregistrées.
