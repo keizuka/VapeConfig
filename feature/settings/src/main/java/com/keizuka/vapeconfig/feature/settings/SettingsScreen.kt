@@ -1,36 +1,91 @@
 package com.keizuka.vapeconfig.feature.settings
 
+import android.app.DownloadManager
+import android.content.Context
+import android.content.Intent
+import android.content.pm.PackageInfo
+import android.content.pm.PackageManager
+import android.net.Uri
+import android.os.Build
+import android.os.Environment
+import android.provider.Settings
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Button
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.platform.LocalUriHandler
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.keizuka.vapeconfig.core.updater.GitHubReleaseChecker
 import com.keizuka.vapeconfig.core.updater.ReleaseInfo
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.isActive
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
+import java.io.File
+import java.security.MessageDigest
+
+private const val PREFS_UPDATER = "vapeconfig_updater"
+private const val PREF_DOWNLOAD_ID = "download_id"
+private const val PREF_DOWNLOAD_VERSION = "download_version"
+private const val APK_MIME_TYPE = "application/vnd.android.package-archive"
 
 @Composable
 fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
     val scope = rememberCoroutineScope()
-    val uriHandler = LocalUriHandler.current
+    val context = LocalContext.current
     val checker = remember { GitHubReleaseChecker() }
+    val downloadManager = remember { context.getSystemService(Context.DOWNLOAD_SERVICE) as DownloadManager }
+    val preferences = remember { context.getSharedPreferences(PREFS_UPDATER, Context.MODE_PRIVATE) }
     var checking by remember { mutableStateOf(false) }
     var release by remember { mutableStateOf<ReleaseInfo?>(null) }
     var checked by remember { mutableStateOf(false) }
     var failed by remember { mutableStateOf(false) }
+    var downloadId by remember {
+        mutableStateOf(preferences.getLong(PREF_DOWNLOAD_ID, -1L).takeIf { it >= 0L })
+    }
+    var downloadedVersion by remember { mutableStateOf(preferences.getString(PREF_DOWNLOAD_VERSION, null)) }
+    var downloadComplete by remember { mutableStateOf(false) }
+    var downloadProgress by remember { mutableIntStateOf(0) }
+    var updateMessage by remember { mutableIntStateOf(0) }
+
+    LaunchedEffect(downloadId) {
+        val id = downloadId ?: return@LaunchedEffect
+        downloadComplete = false
+        while (isActive) {
+            val snapshot = withContext(Dispatchers.IO) { queryDownload(downloadManager, id) }
+            downloadProgress = snapshot.progress
+            when (snapshot.status) {
+                DownloadManager.STATUS_SUCCESSFUL -> {
+                    downloadComplete = true
+                    break
+                }
+                DownloadManager.STATUS_FAILED -> {
+                    downloadId = null
+                    downloadedVersion = null
+                    preferences.edit().remove(PREF_DOWNLOAD_ID).remove(PREF_DOWNLOAD_VERSION).apply()
+                    updateMessage = R.string.settings_download_failed
+                    break
+                }
+                else -> delay(500)
+            }
+        }
+    }
 
     Column(Modifier.fillMaxSize().padding(20.dp), verticalArrangement = Arrangement.spacedBy(16.dp)) {
         TextButton(onClick = onBack) { Text("‹  " + stringResource(R.string.back)) }
@@ -41,6 +96,7 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
                 checking = true
                 checked = false
                 failed = false
+                updateMessage = 0
                 scope.launch {
                     try { release = checker.latestRelease() } catch (_: Exception) { failed = true }
                     checked = true
@@ -58,18 +114,176 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
                     result.version.takeIf { updateAvailable } ?: installedVersion,
                 ),
             )
-            TextButton(onClick = { uriHandler.openUri(result.pageUrl) }) {
+            TextButton(onClick = { openExternal(context, result.pageUrl) }) {
                 Text(stringResource(R.string.settings_open_release))
             }
-            result.apkDownloadUrl?.let { apkUrl ->
-                TextButton(onClick = { uriHandler.openUri(apkUrl) }) {
-                    Text(stringResource(R.string.settings_download_apk))
+            if (updateAvailable) {
+                val apkUrl = result.apkDownloadUrl
+                if (apkUrl == null) {
+                    Text(stringResource(R.string.settings_no_apk), color = MaterialTheme.colorScheme.error)
+                } else {
+                    val hasDownloadedThisVersion = downloadId != null &&
+                        downloadedVersion == result.version && downloadComplete
+                    when {
+                        hasDownloadedThisVersion -> {
+                            Text(stringResource(R.string.settings_download_complete))
+                            Button(onClick = {
+                                updateMessage = 0
+                                scope.launch {
+                                    val fileName = "VapeConfig-" + result.version + ".apk"
+                                    val apkFile = File(
+                                        context.getExternalFilesDir(Environment.DIRECTORY_DOWNLOADS),
+                                        fileName,
+                                    )
+                                    if (!apkFile.isFile) {
+                                        updateMessage = R.string.settings_download_failed
+                                        return@launch
+                                    }
+                                    val expectedDigest = result.apkSha256
+                                    if (expectedDigest != null && !matchesSha256(apkFile, expectedDigest)) {
+                                        updateMessage = R.string.settings_integrity_error
+                                        return@launch
+                                    }
+                                    if (!hasMatchingSigningCertificate(context, apkFile)) {
+                                        updateMessage = R.string.settings_signature_mismatch
+                                        return@launch
+                                    }
+                                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O &&
+                                        !context.packageManager.canRequestPackageInstalls()
+                                    ) {
+                                        updateMessage = R.string.settings_install_permission
+                                        try {
+                                            openExternal(
+                                                context,
+                                                Intent(
+                                                    Settings.ACTION_MANAGE_UNKNOWN_APP_SOURCES,
+                                                    Uri.parse("package:" + context.packageName),
+                                                ),
+                                            )
+                                        } catch (_: Exception) {
+                                            updateMessage = R.string.settings_install_failed
+                                        }
+                                        return@launch
+                                    }
+                                    val uri = downloadManager.getUriForDownloadedFile(downloadId!!)
+                                    if (uri == null) {
+                                        updateMessage = R.string.settings_download_failed
+                                        return@launch
+                                    }
+                                    try {
+                                        val intent = Intent(Intent.ACTION_INSTALL_PACKAGE).apply {
+                                            setDataAndType(uri, APK_MIME_TYPE)
+                                            addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION)
+                                            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                                        }
+                                        context.startActivity(intent)
+                                    } catch (_: Exception) {
+                                        updateMessage = R.string.settings_install_failed
+                                    }
+                                }
+                            }) { Text(stringResource(R.string.settings_install_update)) }
+                        }
+                        downloadId != null && downloadedVersion == result.version -> {
+                            LinearProgressIndicator()
+                            Text(stringResource(R.string.settings_download_progress, downloadProgress))
+                        }
+                        else -> {
+                            Button(onClick = {
+                                updateMessage = 0
+                                try {
+                                    val request = DownloadManager.Request(Uri.parse(apkUrl))
+                                        .setTitle("VapeConfig " + result.version)
+                                        .setDescription(context.getString(R.string.settings_download_description))
+                                        .setMimeType(APK_MIME_TYPE)
+                                        .setNotificationVisibility(DownloadManager.Request.VISIBILITY_VISIBLE_NOTIFY_COMPLETED)
+                                        .setDestinationInExternalFilesDir(
+                                            context,
+                                            Environment.DIRECTORY_DOWNLOADS,
+                                            "VapeConfig-" + result.version + ".apk",
+                                        )
+                                    val id = downloadManager.enqueue(request)
+                                    preferences.edit()
+                                        .putLong(PREF_DOWNLOAD_ID, id)
+                                        .putString(PREF_DOWNLOAD_VERSION, result.version)
+                                        .apply()
+                                    downloadedVersion = result.version
+                                    downloadComplete = false
+                                    downloadProgress = 0
+                                    downloadId = id
+                                } catch (_: Exception) {
+                                    updateMessage = R.string.settings_download_failed
+                                }
+                            }) { Text(stringResource(R.string.settings_download_apk)) }
+                        }
+                    }
                 }
             }
-            Text(stringResource(R.string.settings_manual_install), style = MaterialTheme.typography.bodySmall)
+            Text(stringResource(R.string.settings_install_note), style = MaterialTheme.typography.bodySmall)
+        }
+        if (updateMessage != 0) {
+            Text(stringResource(updateMessage), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall)
         }
     }
 }
+
+private data class DownloadSnapshot(val status: Int, val progress: Int)
+
+private fun queryDownload(manager: DownloadManager, id: Long): DownloadSnapshot {
+    val cursor = manager.query(DownloadManager.Query().setFilterById(id))
+        ?: return DownloadSnapshot(DownloadManager.STATUS_FAILED, 0)
+    cursor.use {
+        if (!it.moveToFirst()) return DownloadSnapshot(DownloadManager.STATUS_FAILED, 0)
+        val status = it.getInt(it.getColumnIndexOrThrow(DownloadManager.COLUMN_STATUS))
+        val downloaded = it.getLong(it.getColumnIndexOrThrow(DownloadManager.COLUMN_BYTES_DOWNLOADED_SO_FAR))
+        val total = it.getLong(it.getColumnIndexOrThrow(DownloadManager.COLUMN_TOTAL_SIZE_BYTES))
+        val progress = if (total > 0L) ((downloaded * 100L) / total).toInt().coerceIn(0, 100) else 0
+        return DownloadSnapshot(status, progress)
+    }
+}
+
+private fun openExternal(context: Context, intent: Intent) {
+    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+    context.startActivity(intent)
+}
+
+private fun matchesSha256(file: File, expected: String): Boolean {
+    val digest = MessageDigest.getInstance("SHA-256")
+    file.inputStream().buffered().use { input ->
+        val buffer = ByteArray(16 * 1024)
+        while (true) {
+            val count = input.read(buffer)
+            if (count < 0) break
+            digest.update(buffer, 0, count)
+        }
+    }
+    val actual = digest.digest().joinToString("") { byte -> "%02x".format(byte) }
+    return actual.equals(expected, ignoreCase = true)
+}
+
+private fun hasMatchingSigningCertificate(context: Context, apkFile: File): Boolean {
+    val manager = context.packageManager
+    return try {
+        val flags = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+            PackageManager.GET_SIGNING_CERTIFICATES
+        } else {
+            PackageManager.GET_SIGNATURES
+        }
+        val installed = manager.getPackageInfo(context.packageName, flags)
+        val downloaded = manager.getPackageArchiveInfo(apkFile.absolutePath, flags) ?: return false
+        if (downloaded.packageName != context.packageName) return false
+        signingCertificates(installed) == signingCertificates(downloaded)
+    } catch (_: Exception) {
+        false
+    }
+}
+
+@Suppress("DEPRECATION")
+private fun signingCertificates(info: PackageInfo): Set<String> =
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+        info.signingInfo?.apkContentsSigners?.map { it.toCharsString() }?.toSet().orEmpty()
+    } else {
+        info.signatures?.map { it.toCharsString() }?.toSet().orEmpty()
+    }
 
 private fun compareVersions(left: String, right: String): Int {
     val leftParts = left.removePrefix("v").split('.', '-', '+')
