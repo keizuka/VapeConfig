@@ -45,4 +45,4 @@ Les recettes sont des calculs de volumes fondés sur les concentrations et suppo
 
 La documentation des formules et des références de résistivité se trouve dans [CALCULATIONS.md](docs/CALCULATIONS.md).
 
-La release est une APK debug non signée avec une clé de production. Une signature dédiée et les vérifications requises sont nécessaires avant une diffusion de production.
+Les APK de release sont signés avec la clé stable du projet afin de permettre les mises à jour Android. Le workflow GitHub Actions compile un APK à chaque push et publie une release uniquement lorsqu’un numéro de version est fourni au déclenchement manuel.
