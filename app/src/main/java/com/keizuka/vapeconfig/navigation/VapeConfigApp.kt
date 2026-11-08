@@ -41,7 +41,7 @@ fun VapeConfigApp() {
                     Section.Configurator.route -> ConfiguratorScreen(database.coilConfigurations()) { navController.popBackStack() }
                     Section.Liquids.route -> LiquidsScreen(database.liquidRecipes()) { navController.popBackStack() }
                     Section.Batteries.route -> BatteriesScreen(database.batteryProfiles()) { navController.popBackStack() }
-                    Section.Settings.route -> SettingsScreen(BuildConfig.VERSION_NAME) { navController.popBackStack() }
+                    Section.Settings.route -> SettingsScreen(BuildConfig.VERSION_NAME, database) { navController.popBackStack() }
                 }
             }
         }
