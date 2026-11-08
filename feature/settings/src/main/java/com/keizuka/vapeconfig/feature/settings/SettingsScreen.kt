@@ -114,7 +114,7 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
                     result.version.takeIf { updateAvailable } ?: installedVersion,
                 ),
             )
-            TextButton(onClick = { openExternal(context, result.pageUrl) }) {
+            TextButton(onClick = { openExternal(context, Intent(Intent.ACTION_VIEW, Uri.parse(result.pageUrl))) }) {
                 Text(stringResource(R.string.settings_open_release))
             }
             if (updateAvailable) {
@@ -140,11 +140,11 @@ fun SettingsScreen(installedVersion: String, onBack: () -> Unit) {
                                         return@launch
                                     }
                                     val expectedDigest = result.apkSha256
-                                    if (expectedDigest != null && !matchesSha256(apkFile, expectedDigest)) {
+                                    if (expectedDigest != null && !withContext(Dispatchers.IO) { matchesSha256(apkFile, expectedDigest) }) {
                                         updateMessage = R.string.settings_integrity_error
                                         return@launch
                                     }
-                                    if (!hasMatchingSigningCertificate(context, apkFile)) {
+                                    if (!withContext(Dispatchers.IO) { hasMatchingSigningCertificate(context, apkFile) }) {
                                         updateMessage = R.string.settings_signature_mismatch
                                         return@launch
                                     }
