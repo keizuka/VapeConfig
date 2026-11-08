@@ -23,4 +23,6 @@ dependencies {
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(libs.kotlinx.coroutines.android)
     implementation(project(":core:updater"))
+    implementation(project(":core:database"))
+    implementation(libs.androidx.room.ktx)
 }
