@@ -8,7 +8,9 @@
     <string name="catalog_search">Rechercher</string>
     <string name="catalog_shared_error">Catalogue partagé indisponible. Vérifiez la connexion et réessayez.</string>
     <string name="catalog_shared_empty">Aucune référence ne correspond à cette recherche.</string>
+    <string name="catalog_offline_fallback">Connexion indisponible : les fiches intégrées restent consultables hors ligne.</string>
     <string name="catalog_source">Source</string>
+    <string name="catalog_close">Fermer</string>
     <string name="catalog_add_title">Ajouter une fiche locale</string>
     <string name="catalog_name">Nom</string>
     <string name="catalog_category">Catégorie</string>
