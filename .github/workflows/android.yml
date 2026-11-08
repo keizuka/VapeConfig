@@ -38,19 +38,23 @@ jobs:
 
       - name: Compare APK signing certificate with latest release
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: \${{ github.token }}
         run: |
           apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)"
           mkdir -p "$RUNNER_TEMP/latest-release"
           if gh release download --repo "$GITHUB_REPOSITORY" --pattern VapeConfig-debug.apk --dir "$RUNNER_TEMP/latest-release"; then
-            current_cert="$("$apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')"
-            previous_cert="$("$apksigner" verify --print-certs "$RUNNER_TEMP/latest-release/VapeConfig-debug.apk" | sed -n 's/^Signer #1 certificate SHA-256 digest: //p')"
+            current_info="$("$apksigner" verify --print-certs app/build/outputs/apk/debug/app-debug.apk 2>&1)"
+            previous_info="$("$apksigner" verify --print-certs "$RUNNER_TEMP/latest-release/VapeConfig-debug.apk" 2>&1)"
+            current_cert="$(printf '%s\n' "$current_info" | grep -F 'certificate SHA-256 digest:' | tail -n 1 | awk '{print $NF}')"
+            previous_cert="$(printf '%s\n' "$previous_info" | grep -F 'certificate SHA-256 digest:' | tail -n 1 | awk '{print $NF}')"
             echo "Current APK certificate: $current_cert"
             echo "Latest release certificate: $previous_cert"
             if [[ -n "$current_cert" && "$current_cert" == "$previous_cert" ]]; then
               echo "Signing certificate matches; Android can update the existing installation."
             else
               echo "::warning::Signing certificate differs from the latest release. Android will not install this APK over that installation."
+              printf '%s\n' "$current_info"
+              printf '%s\n' "$previous_info"
             fi
           else
             echo "No previous release APK available for comparison."
