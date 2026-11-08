@@ -38,7 +38,7 @@ jobs:
 
       - name: Compare APK signing certificate with latest release
         env:
-          GH_TOKEN: \${{ github.token }}
+          GH_TOKEN: ${{ github.token }}
         run: |
           apksigner="$(find "$ANDROID_HOME/build-tools" -name apksigner | sort -V | tail -n 1)"
           mkdir -p "$RUNNER_TEMP/latest-release"
