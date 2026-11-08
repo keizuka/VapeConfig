@@ -22,6 +22,7 @@ dependencies {
     implementation("androidx.compose.material3:material3")
     implementation("androidx.compose.ui:ui-tooling-preview")
     implementation(libs.kotlinx.coroutines.android)
+    implementation(libs.androidx.activity.compose)
     implementation(project(":core:updater"))
     implementation(project(":core:database"))
     implementation(libs.androidx.room.ktx)
