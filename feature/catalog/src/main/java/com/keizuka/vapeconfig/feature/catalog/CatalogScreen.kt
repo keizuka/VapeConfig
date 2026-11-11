@@ -3,6 +3,8 @@ package com.keizuka.vapeconfig.feature.catalog
 import android.webkit.WebView
 import android.webkit.WebViewClient
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,6 +17,7 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.AssistChip
+import androidx.compose.material3.FilterChip
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Tab
@@ -56,6 +59,7 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
     var entries by remember { mutableStateOf(emptyList<CatalogItemEntity>()) }
     var shared by remember { mutableStateOf(SharedCatalogItem.builtInCatalog) }
     var query by remember { mutableStateOf("") }
+    var selectedCategory by remember { mutableStateOf("") }
     var webQuery by remember { mutableStateOf("") }
     var webSearchUrl by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(false) }
@@ -92,14 +96,32 @@ fun CatalogScreen(dao: CatalogItemDao, onBack: () -> Unit) {
                 Text(stringResource(if (loading) R.string.catalog_loading else R.string.catalog_refresh))
             }
             OutlinedTextField(query, { query = it }, label = { Text(stringResource(R.string.catalog_search)) }, singleLine = true, modifier = Modifier.fillMaxWidth())
+            Row(
+                modifier = Modifier.fillMaxWidth().horizontalScroll(rememberScrollState()).padding(vertical = 6.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                FilterChip(
+                    selected = selectedCategory.isEmpty(),
+                    onClick = { selectedCategory = "" },
+                    label = { Text(stringResource(R.string.catalog_filter_all)) },
+                )
+                shared.map { it.category }.distinct().forEach { category ->
+                    FilterChip(
+                        selected = selectedCategory == category,
+                        onClick = { selectedCategory = if (selectedCategory == category) "" else category },
+                        label = { Text(category) },
+                    )
+                }
+            }
             if (sharedError) {
                 Text(stringResource(R.string.catalog_offline_fallback), color = MaterialTheme.colorScheme.error, style = MaterialTheme.typography.bodySmall, modifier = Modifier.padding(top = 6.dp))
             }
             LazyColumn(verticalArrangement = Arrangement.spacedBy(12.dp), modifier = Modifier.fillMaxSize()) {
                 val normalizedQuery = normalizeForSearch(query)
                 val filtered = shared.filter { item ->
-                    normalizeForSearch(item.name + " " + item.category + " " + item.description + " " + item.searchTerms + " " + item.id + " " + item.sourceUrl)
-                        .contains(normalizedQuery)
+                    (selectedCategory.isEmpty() || item.category == selectedCategory) &&
+                        normalizeForSearch(item.name + " " + item.category + " " + item.description + " " + item.searchTerms + " " + item.id + " " + item.sourceUrl)
+                            .contains(normalizedQuery)
                 }
                 if (filtered.isEmpty() && !loading) item { Text(stringResource(R.string.catalog_shared_empty), modifier = Modifier.padding(12.dp)) }
                 items(filtered, key = { it.id }) { item ->

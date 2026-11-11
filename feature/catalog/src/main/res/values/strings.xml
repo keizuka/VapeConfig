@@ -13,6 +13,7 @@
     <string name="catalog_refresh">Actualiser le catalogue partagé</string>
     <string name="catalog_loading">Chargement…</string>
     <string name="catalog_search">Rechercher</string>
+    <string name="catalog_filter_all">Tout</string>
     <string name="catalog_shared_error">Catalogue partagé indisponible. Vérifiez la connexion et réessayez.</string>
     <string name="catalog_shared_empty">Aucune référence ne correspond à cette recherche.</string>
     <string name="catalog_offline_fallback">Connexion indisponible : les fiches intégrées restent consultables hors ligne.</string>

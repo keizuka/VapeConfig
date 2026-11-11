@@ -4,7 +4,7 @@ Application Android en français pour gérer son matériel de vape et ses recett
 
 ## Fonctions
 
-- Recherche Web intégrée pour trouver des box, atomiseurs, clearomiseurs, résistances et autres matériels; catalogue partagé consultable et fiches matérielles locales modifiables/supprimables.
+- Catalogue partagé de références préremplies pour accus, box, clearomiseurs, atos reconstructibles et résistances, avec recherche, filtres et liens vers les fabricants; recherche Web intégrée pour les modèles récents.
 - Comparaison de texte des connecteurs pour signaler seulement s’ils concordent; cela ne constitue pas une vérification de compatibilité complète.
 - Profils de batteries intégrées et amovibles, avec références fabricant saisies par l’utilisateur.
 - Estimateur théorique de résistance pour fil rond (Kanthal A-1, Nichrome 80 et acier 316L) et fiches reconstructibles enregistrées.
@@ -41,7 +41,7 @@ L’estimation reconstructible est théorique, pour des coils simples en fil ron
 
 La comparaison du catalogue porte uniquement sur le texte des connecteurs renseignés. Elle ne vérifie ni les dimensions, ni le dégagement, ni l’électronique, ni la sécurité.
 
-Les recettes sont des calculs de volumes fondés sur les concentrations et supports indiqués. Vérifiez les étiquettes et les consignes officielles des produits, notamment pour la nicotine. Les profils de batteries sont des notes personnelles, pas une certification ni une recommandation de modèle.
+Les recettes sont des calculs de volumes fondés sur les concentrations et supports indiqués. Vérifiez les étiquettes et les consignes officielles des produits, notamment pour la nicotine. Les profils de batteries sont des notes personnelles, pas une certification ni une recommandation de modèle. Les accus lithium-ion nus sont des composants industriels; les fiches du catalogue ne sont pas des recommandations d’achat ni d’usage en vape. Plusieurs fabricants déconseillent cet emploi. Vérifiez toujours le manuel exact de l’appareil.
 
 La documentation des formules et des références de résistivité se trouve dans [CALCULATIONS.md](docs/CALCULATIONS.md).
 

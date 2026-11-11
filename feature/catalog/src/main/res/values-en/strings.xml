@@ -13,6 +13,7 @@
     <string name="catalog_refresh">Refresh shared catalog</string>
     <string name="catalog_loading">Loading…</string>
     <string name="catalog_search">Search</string>
+    <string name="catalog_filter_all">All</string>
     <string name="catalog_shared_error">Shared catalog unavailable. Check the connection and try again.</string>
     <string name="catalog_shared_empty">No entries match this search.</string>
     <string name="catalog_offline_fallback">No connection: built-in entries are still available offline.</string>
